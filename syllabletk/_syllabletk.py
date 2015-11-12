@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import panphon
+import regex as re
 from types import *
 
 class Syllabifier(object):
-    def __init__(self):
+    def __init__(self, word):
         self.ft = panphon.FeatureTable()
+        self.son_parse(word)
 
     def son_parse(self, word):
         word = list(panphon.segment_text(word))
@@ -44,4 +46,23 @@ class Syllabifier(object):
         for i, con in enumerate(constituents):
             if con == ' ':
                 constituents[i] = 'O'
-        return (word, constituents)
+        self.word = word
+        self.constituents = constituents
+
+    def as_tuples_iter(self):
+        labels = ''.join(self.constituents)
+        word = self.word
+        for m in re.finditer(ur'(O*)(N)(C*)', labels):
+            o, n, c = len(m.group(1)), len(m.group(2)), len(m.group(3))
+            ons = ''.join(word[:o])
+            nuc = ''.join(word[o:o+n])
+            cod = ''.join(word[o+n:o+n+c])
+            yield (ons, nuc, cod)
+            word = word[o+n+c:]
+
+    def as_tuples(self):
+        return list(self.as_tuples_iter())
+
+    def as_strings(self):
+        for (o, n, c) in self.as_tuples_iter():
+            yield o + n + c

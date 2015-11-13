@@ -22,7 +22,7 @@ class Syllabifier(object):
         assert type(constituents) == ListType
         # Find nuclei.
         for i, score in enumerate(scores):
-            if score >= 4:
+            if score >= 7:
                 constituents[i] = 'N'
         # Construct onsets.
         for i, con in enumerate(constituents):

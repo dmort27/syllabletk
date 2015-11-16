@@ -3,7 +3,7 @@
 import panphon
 import itertools
 import regex as re
-from types import *
+from types import ListType
 
 def count_true(items):
     return len([bool(x) for x in items if x])
@@ -88,21 +88,32 @@ class SyllableAnalyzer(object):
         self.features = [
 
             # Language allows codas
-            ('PHONOT_CODAS',
+            ('SYL_COD_SIMPLE',
              self.has_codas),
 
             # Language allows complex codas
-            ('PHONOT_CODAS_COMPLEX',
+            ('SYL_COD_COMPLEX',
              self.has_complex_codas),
 
             # Language allows complex onsets
-            ('PHONOT_ONSETS_COMPLEX',
+            ('SYL_ONS_COMPLEX',
              self.has_complex_onsets),
         ]
         self.names, _ = zip(*self.features)
         self.values = {} # dictionary of lists of floats
 
     def analyze(self, code, words):
+        """Applies feature functions to streams of words and returns scores
+        between 0.0 and 1.0, based on the certainty that the corresponding
+        statement is true of the language.
+
+        WARNING: Not revised to function properly with revised feature
+        functions!
+
+        code -- ISO 639-3 language code for the language being processed
+        words -- Iterator of words (parseable Unicode IPA stings) from the
+        language.
+        """
         def to_float(x):
             return float(bool(x))
         values = []
@@ -112,6 +123,10 @@ class SyllableAnalyzer(object):
         self.values[code] = values
 
     def has_codas(self, ws):
+        """Return non-zero value if language has codas.
+
+        ws -- Iterator of words.
+        """
         codas = []
         for w in ws:
             _, _, cod = zip(*Syllabifier(w).as_tuples())
@@ -119,6 +134,10 @@ class SyllableAnalyzer(object):
         return count_true(codas)
 
     def has_complex_codas(self, ws):
+        """Return non-zero value if language has complex codas.
+
+        ws -- Iterator of words.
+        """
         codas = []
         for w in ws:
             _, _, cod = zip(*Syllabifier(w).as_tuples())
@@ -126,13 +145,21 @@ class SyllableAnalyzer(object):
         return count_true([c for c in codas if len(c) > 1])
 
     def has_complex_onsets(self, ws):
+        """Return non-zero value if language has complex onsets.
+
+        ws -- Iterator of words.
+        """
         onsets = []
         for w in ws:
             ons, _, _ = zip(*Syllabifier(w).as_tuples())
             onsets += ons
         return count_true([o for o in onsets if len(o) > 1])
 
-    def has_obstruent_liquid_onsets(self, ws):
+    def has_obstruent_approximant_onsets(self, ws):
+        """Return non-zero value if language has obstruent-approximant onsets.
+
+        ws -- Iterator of words.
+        """
         regexp = compile_regex_from_str(ur'[-syl -son -cons]' +
                                         ur'[-syl +son +cont]')
         onsets = []
@@ -141,7 +168,11 @@ class SyllableAnalyzer(object):
             onsets += ons
         return count_true([o for on in onsets if regexp.match(o)])
 
-    def has_liquid_obstruent_codas(self, ws):
+    def has_approximant_obstruent_codas(self, ws):
+        """Return non-zero value if language has approximant-obstruent codas.
+
+        ws -- Iterator of words.
+        """
         regexp = compile_regex_from_str(ur'[-syl +son +cont]' +
                                         ur'[-syl -son -cont]')
         codas = []

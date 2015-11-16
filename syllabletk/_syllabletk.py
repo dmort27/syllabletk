@@ -128,3 +128,21 @@ class SyllableAnalyzer(object):
             ons, _, _ = zip(*Syllabifier(w).as_tuples())
             onsets += ons
         return any([o for o in onsets if len(o) > 1])
+
+    def has_obstruent_liquid_onsets(self, ws):
+        regexp = compile_regex_from_str(ur'[-syl -son -cons]' +
+                                        ur'[-syl +son +cont]')
+        onsets = []
+        for w in ws:
+            ons, _, _ = zip(*Syllabifier(w).as_tuples())
+            onsets += ons
+        return any([o for on in onsets if regexp.match(o)])
+
+    def has_liquid_obstruent_codas(self, ws):
+        regexp = compile_regex_from_str(ur'[-syl +son +cont]' +
+                                        ur'[-syl -son -cont]')
+        codas = []
+        for w in ws:
+            _, _, cod = zip(*Syllabifier(w).as_tuples())
+            codas += cod
+        return any([c for c in codas if regexp.match(c)])

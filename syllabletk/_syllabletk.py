@@ -111,7 +111,7 @@ class SyllableAnalyzer(object):
         functions!
 
         code -- ISO 639-3 language code for the language being processed
-        words -- Iterator of words (parseable Unicode IPA stings) from the
+        words -- Iterator over words (parseable Unicode IPA stings) from the
         language.
         """
         def to_float(x):
@@ -125,7 +125,7 @@ class SyllableAnalyzer(object):
     def has_codas(self, ws):
         """Return non-zero value if language has codas.
 
-        ws -- Iterator of words.
+        ws -- Iterator over words.
         """
         codas = []
         for w in ws:
@@ -136,7 +136,7 @@ class SyllableAnalyzer(object):
     def has_complex_codas(self, ws):
         """Return non-zero value if language has complex codas.
 
-        ws -- Iterator of words.
+        ws -- Iterator over words.
         """
         codas = []
         for w in ws:
@@ -147,7 +147,7 @@ class SyllableAnalyzer(object):
     def has_complex_onsets(self, ws):
         """Return non-zero value if language has complex onsets.
 
-        ws -- Iterator of words.
+        ws -- Iterator over words.
         """
         onsets = []
         for w in ws:
@@ -158,7 +158,7 @@ class SyllableAnalyzer(object):
     def has_obstruent_approximant_onsets(self, ws):
         """Return non-zero value if language has obstruent-approximant onsets.
 
-        ws -- Iterator of words.
+        ws -- Iterator over words.
         """
         regexp = compile_regex_from_str(ur'[-syl -son -cons]' +
                                         ur'[-syl +son +cont]')
@@ -171,7 +171,7 @@ class SyllableAnalyzer(object):
     def has_approximant_obstruent_codas(self, ws):
         """Return non-zero value if language has approximant-obstruent codas.
 
-        ws -- Iterator of words.
+        ws -- Iterator over words.
         """
         regexp = compile_regex_from_str(ur'[-syl +son +cont]' +
                                         ur'[-syl -son -cont]')

@@ -5,6 +5,9 @@ import itertools
 import regex as re
 from types import *
 
+def count_true(items):
+    return len([bool(x) for x in items if x])
+
 class Syllabifier(object):
     """Syllabifies words of text.
 
@@ -113,21 +116,21 @@ class SyllableAnalyzer(object):
         for w in ws:
             _, _, cod = zip(*Syllabifier(w).as_tuples())
             codas += cod
-        return any(codas)
+        return count_true(codas)
 
     def has_complex_codas(self, ws):
         codas = []
         for w in ws:
             _, _, cod = zip(*Syllabifier(w).as_tuples())
             codas += cod
-        return any([c for c in codas if len(c) > 1])
+        return count_true([c for c in codas if len(c) > 1])
 
     def has_complex_onsets(self, ws):
         onsets = []
         for w in ws:
             ons, _, _ = zip(*Syllabifier(w).as_tuples())
             onsets += ons
-        return any([o for o in onsets if len(o) > 1])
+        return count_true([o for o in onsets if len(o) > 1])
 
     def has_obstruent_liquid_onsets(self, ws):
         regexp = compile_regex_from_str(ur'[-syl -son -cons]' +
@@ -136,7 +139,7 @@ class SyllableAnalyzer(object):
         for w in ws:
             ons, _, _ = zip(*Syllabifier(w).as_tuples())
             onsets += ons
-        return any([o for on in onsets if regexp.match(o)])
+        return count_true([o for on in onsets if regexp.match(o)])
 
     def has_liquid_obstruent_codas(self, ws):
         regexp = compile_regex_from_str(ur'[-syl +son +cont]' +
@@ -145,4 +148,4 @@ class SyllableAnalyzer(object):
         for w in ws:
             _, _, cod = zip(*Syllabifier(w).as_tuples())
             codas += cod
-        return any([c for c in codas if regexp.match(c)])
+        return count_true([c for c in codas if regexp.match(c)])

@@ -6,6 +6,7 @@ import regex as re
 from types import ListType
 
 def count_true(items):
+"""Return the number of elements in an iterable that evaluate as true."""
     return len([bool(x) for x in items if x])
 
 class Syllabifier(object):
@@ -131,6 +132,7 @@ class SyllableAnalyzer(object):
         for w in ws:
             _, _, cod = zip(*Syllabifier(w).as_tuples())
             codas += cod
+        syllables = len(codas)
         return count_true(codas)
 
     def has_complex_codas(self, ws):

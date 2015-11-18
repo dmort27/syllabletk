@@ -17,6 +17,7 @@ Syllable analyzer provides a variety of methods for identifying syllable-structu
   + SYL_ONS_COMPLEX_OBS_APPROX_ONLY
   + SYL_ONS_COMPLEX_PLOS_SON_ONLY
   + SYL_ONS_COMPLEX_OBS_SON_ONLY
+  + SYL_ONS_COMPLEX
   + SYL_ONS_COMPLEX_MAX_2
   + SYL_ONS_COMPLEX_MAX_3
   + SYL_ONS_COMPLEX_MAX_4

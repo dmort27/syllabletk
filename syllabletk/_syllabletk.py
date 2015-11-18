@@ -6,7 +6,7 @@ import regex as re
 from types import ListType
 
 def count_true(items):
-"""Return the number of elements in an iterable that evaluate as true."""
+    """Return the number of elements in an iterable that evaluate as true."""
     return len([bool(x) for x in items if x])
 
 class Syllabifier(object):
@@ -90,95 +90,61 @@ class SyllableAnalyzer(object):
 
             # Language allows codas
             ('SYL_COD_SIMPLE',
-             self.has_codas),
+             self.the_simple_codas),
 
             # Language allows complex codas
             ('SYL_COD_COMPLEX',
-             self.has_complex_codas),
+             self.the_complex_codas),
+
+            # Language allows approximant-obstruent codas
+            ('SYL_COD_APPROX_OBS',
+             self.the_approximant_obstruent_codas),
 
             # Language allows complex onsets
             ('SYL_ONS_COMPLEX',
-             self.has_complex_onsets),
+             self.the_complex_onsets),
+
+            # Language allows obstruent-approximant onsets
+            ('SYL_ONS_OBS_APPROX',
+             self.the_obstruent_approximant_onsets),
         ]
         self.names, _ = zip(*self.features)
         self.values = {} # dictionary of lists of floats
 
-    def analyze(self, code, words):
-        """Applies feature functions to streams of words and returns scores
-        between 0.0 and 1.0, based on the certainty that the corresponding
-        statement is true of the language.
-
-        WARNING: Not revised to function properly with revised feature
-        functions!
-
-        code -- ISO 639-3 language code for the language being processed
-        words -- Iterator over words (parseable Unicode IPA stings) from the
-        language.
-        """
-        def to_float(x):
-            return float(bool(x))
-        values = []
-        for _, func in self.features:
-            value = to_float(func(words))
-            values.append(value)
-        self.values[code] = values
-
-    def has_codas(self, ws):
-        """Return non-zero value if language has codas.
-
-        ws -- Iterator over words.
-        """
+    def the_codas(self, ws):
         codas = []
         for w in ws:
             _, _, cod = zip(*Syllabifier(w).as_tuples())
             codas += cod
-        syllables = len(codas)
-        return count_true(codas)
+        return codas
 
-    def has_complex_codas(self, ws):
-        """Return non-zero value if language has complex codas.
+    def the_simple_codas(self, ws):
+        return map(lambda x: 1.0 if x else 0.0,
+                   self.the_codas(ws))
 
-        ws -- Iterator over words.
-        """
-        codas = []
-        for w in ws:
-            _, _, cod = zip(*Syllabifier(w).as_tuples())
-            codas += cod
-        return count_true([c for c in codas if len(c) > 1])
+    def the_complex_codas(self, ws):
+        return map(lambda x: 1.0 if len(x) > 1 else 0.0,
+                   self.the_codas(ws))
 
-    def has_complex_onsets(self, ws):
-        """Return non-zero value if language has complex onsets.
-
-        ws -- Iterator over words.
-        """
-        onsets = []
-        for w in ws:
-            ons, _, _ = zip(*Syllabifier(w).as_tuples())
-            onsets += ons
-        return count_true([o for o in onsets if len(o) > 1])
-
-    def has_obstruent_approximant_onsets(self, ws):
-        """Return non-zero value if language has obstruent-approximant onsets.
-
-        ws -- Iterator over words.
-        """
-        regexp = compile_regex_from_str(ur'[-syl -son -cons]' +
-                                        ur'[-syl +son +cont]')
-        onsets = []
-        for w in ws:
-            ons, _, _ = zip(*Syllabifier(w).as_tuples())
-            onsets += ons
-        return count_true([o for on in onsets if regexp.match(o)])
-
-    def has_approximant_obstruent_codas(self, ws):
-        """Return non-zero value if language has approximant-obstruent codas.
-
-        ws -- Iterator over words.
-        """
+    def the_approximant_obstruent_codas(self, ws):
         regexp = compile_regex_from_str(ur'[-syl +son +cont]' +
                                         ur'[-syl -son -cont]')
-        codas = []
-        for w in ws:
-            _, _, cod = zip(*Syllabifier(w).as_tuples())
-            codas += cod
-        return count_true([c for c in codas if regexp.match(c)])
+        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
+                   self.the_codas(w))
+
+    def the_onsets(self, ws):
+        onsets = []
+        for o in ws:
+            ons, _, _ = zip(*Syllabifier(w).as_typles())
+            onsets += ons
+        return onsets
+
+    def the_complex_onsets(self, ws):
+        return map(lambda x: 1.0 if len(x) > 1 else 0.0,
+                   self.the_onsets(ws))
+
+    def the_obstruent_approximant_onsets(self, ws):
+        regexp = compile_regex_from_str(ur'[-syl -son -cons]' +
+                                        ur'[-syl +son +cont]')
+        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
+                   self.the_onsets(ws))

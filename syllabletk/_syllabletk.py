@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import panphon
-import itertools
 import regex as re
 from types import ListType
+
 
 def count_true(items):
     """Return the number of elements in an iterable that evaluate as true."""
     return len([bool(x) for x in items if x])
+
 
 class Syllabifier(object):
     """Syllabifies words of text.
@@ -33,8 +34,8 @@ class Syllabifier(object):
             if con == 'N':
                 j = i
                 while j > 0 \
-                        and scores[j-1] < scores[j] \
-                        and constituents[j-1] == ' ':
+                        and scores[j - 1] < scores[j] \
+                        and constituents[j - 1] == ' ':
                     j -= 1
                     constituents[j] = 'O'
         # Construct codas.
@@ -42,8 +43,8 @@ class Syllabifier(object):
             if con == 'N':
                 j = i
                 while j < len(word) - 1 \
-                        and scores[j] > scores[j+1] \
-                        and constituents[j+1] == ' ':
+                        and scores[j] > scores[j + 1] \
+                        and constituents[j + 1] == ' ':
                     j += 1
                     constituents[j] = 'C'
         # Leftover final Cs must be in coda.
@@ -64,10 +65,10 @@ class Syllabifier(object):
         for m in re.finditer(ur'(O*)(N)(C*)', labels):
             o, n, c = len(m.group(1)), len(m.group(2)), len(m.group(3))
             ons = ''.join(word[:o])
-            nuc = ''.join(word[o:o+n])
-            cod = ''.join(word[o+n:o+n+c])
+            nuc = ''.join(word[o:o + n])
+            cod = ''.join(word[o + n:o + n + c])
             yield (ons, nuc, cod)
-            word = word[o+n+c:]
+            word = word[o + n + c:]
 
     def as_tuples(self):
         return list(self.as_tuples_iter())
@@ -81,11 +82,13 @@ class Syllabifier(object):
 
 
 class SyllableAnalyzer(object):
-    """Provide rule-based analysis of the syllabic structure of a iterable stream of words.
+    """Provide rule-based analysis of the syllabic structure of a iterable
+    stream of words.
 
     words -- an iterable of Unicode IPA strings.
     """
     def __init__(self):
+        self.ft = panphon.FeatureTable()
         self.features = [
 
             # Language allows codas
@@ -109,7 +112,7 @@ class SyllableAnalyzer(object):
              self.the_obstruent_approximant_onsets),
         ]
         self.names, _ = zip(*self.features)
-        self.values = {} # dictionary of lists of floats
+        self.values = {}  # dictionary of lists of floats
 
     def the_codas(self, ws):
         codas = []
@@ -127,14 +130,14 @@ class SyllableAnalyzer(object):
                    self.the_codas(ws))
 
     def the_approximant_obstruent_codas(self, ws):
-        regexp = compile_regex_from_str(ur'[-syl +son +cont]' +
-                                        ur'[-syl -son -cont]')
+        regexp = self.ft.compile_regex_from_str(ur'[-syl +son +cont]' +
+                                                ur'[-syl -son -cont]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
-                   self.the_codas(w))
+                   self.the_codas(ws))
 
     def the_onsets(self, ws):
         onsets = []
-        for o in ws:
+        for w in ws:
             ons, _, _ = zip(*Syllabifier(w).as_typles())
             onsets += ons
         return onsets
@@ -144,7 +147,7 @@ class SyllableAnalyzer(object):
                    self.the_onsets(ws))
 
     def the_obstruent_approximant_onsets(self, ws):
-        regexp = compile_regex_from_str(ur'[-syl -son -cons]' +
-                                        ur'[-syl +son +cont]')
+        regexp = self.ft.compile_regex_from_str(ur'[-syl -son -cons]' +
+                                                ur'[-syl +son +cont]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_onsets(ws))

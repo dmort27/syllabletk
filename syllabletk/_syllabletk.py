@@ -15,9 +15,60 @@ class Syllabifier(object):
 
     word -- Unicode IPA string
     """
-    def __init__(self, word):
+    def __init__(self, word, son_peak=False):
         self.ft = panphon.FeatureTable()
-        self.son_parse(word)
+        if son_peak:
+            self.son_peak_parse(word)
+        else:
+            self.son_parse(word)
+
+    def son_peak_parse(self, word):
+        def is_peak(scores, i):
+            score = scores[i]
+            before = scores[i - 1]
+            after = scores[i + 1]
+            if score >= after and score >= before:
+                return True
+            else:
+                return False
+        word = list(panphon.segment_text(word))
+        scores = map(lambda x: self.ft.sonority(x), word)
+        scores = [0] + scores + [0]
+        constits = len(word) * [' ']
+        constits = ['<'] + constits + ['>']
+        # Find nuclei
+        for i in range(1, len(scores) - 1):
+            if is_peak(scores, i):
+                constits[i] = 'N'
+        # Construct onsets.
+        for i, con in enumerate(constits):
+            if con == 'N':
+                j = i
+                while j > 0 \
+                        and scores[j - 1] < scores[j] \
+                        and constits[j - 1] == ' ':
+                    j -= 1
+                    constits[j] = 'O'
+        # Construct codas.
+        for i, con in enumerate(constits):
+            if con == 'N':
+                j = i
+                while j < len(word) - 1 \
+                        and scores[j] > scores[j + 1] \
+                        and constits[j + 1] == ' ':
+                    j += 1
+                    constits[j] = 'C'
+        # Leftover final Cs must be in coda.
+        i = len(word) - 1
+        while constits[i] == ' ' and i > 0:
+            constits[i] = 'C'
+            i -= 1
+        # Finally, leftover Cs must be in onsets.
+        for i, con in enumerate(constits):
+            if con == ' ':
+                constits[i] = 'O'
+        self.word = word
+        self.constituents = constits[1:-1]
 
     def son_parse(self, word):
         word = list(panphon.segment_text(word))
@@ -90,6 +141,13 @@ class SyllableAnalyzer(object):
     def __init__(self):
         self.ft = panphon.FeatureTable()
         self.features = [
+            # Language allows complex onsets
+            ('SYL_ONS_COMPLEX',
+             self.the_complex_onsets),
+
+            # Language allows obstruent-approximant onsets
+            ('SYL_ONS_OBS_APPROX',
+             self.the_obstruent_approximant_onsets),
 
             # Language allows codas
             ('SYL_COD_SIMPLE',
@@ -102,17 +160,26 @@ class SyllableAnalyzer(object):
             # Language allows approximant-obstruent codas
             ('SYL_COD_APPROX_OBS',
              self.the_approximant_obstruent_codas),
-
-            # Language allows complex onsets
-            ('SYL_ONS_COMPLEX',
-             self.the_complex_onsets),
-
-            # Language allows obstruent-approximant onsets
-            ('SYL_ONS_OBS_APPROX',
-             self.the_obstruent_approximant_onsets),
         ]
         self.names, _ = zip(*self.features)
         self.values = {}  # dictionary of lists of floats
+
+    def the_onsets(self, ws):
+        onsets = []
+        for w in ws:
+            ons, _, _ = zip(*Syllabifier(w).as_tuples())
+            onsets += ons
+        return onsets
+
+    def the_complex_onsets(self, ws):
+        return map(lambda x: 1.0 if len(x) > 1 else 0.0,
+                   self.the_onsets(ws))
+
+    def the_obstruent_approximant_onsets(self, ws):
+        regexp = self.ft.compile_regex_from_str(ur'[-syl -son -cons]' +
+                                                ur'[-syl +son +cont]')
+        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
+                   self.the_onsets(ws))
 
     def the_codas(self, ws):
         codas = []
@@ -134,20 +201,3 @@ class SyllableAnalyzer(object):
                                                 ur'[-syl -son -cont]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_codas(ws))
-
-    def the_onsets(self, ws):
-        onsets = []
-        for w in ws:
-            ons, _, _ = zip(*Syllabifier(w).as_typles())
-            onsets += ons
-        return onsets
-
-    def the_complex_onsets(self, ws):
-        return map(lambda x: 1.0 if len(x) > 1 else 0.0,
-                   self.the_onsets(ws))
-
-    def the_obstruent_approximant_onsets(self, ws):
-        regexp = self.ft.compile_regex_from_str(ur'[-syl -son -cons]' +
-                                                ur'[-syl +son +cont]')
-        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
-                   self.the_onsets(ws))

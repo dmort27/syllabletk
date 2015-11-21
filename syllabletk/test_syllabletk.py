@@ -5,19 +5,21 @@ import _syllabletk
 
 
 class TestSyllabifier(unittest.TestCase):
-    def test_son_parse(self):
-        self.assertEqual(_syllabletk.Syllabifier(u'hwelp').as_tuples(),
-                         [(u'hw', u'e', u'lp')])
-        self.assertEqual(_syllabletk.Syllabifier(u'strɐm').as_tuples(),
-                         [(u'str', u'ɐ', u'm')])
-
-    def test_son_peak_parse(self):
+    def test_one_syllable(self):
         self.assertEqual(_syllabletk.Syllabifier(
                          u'hwelp', son_peak=True).as_tuples(),
                          [(u'hw', u'e', u'lp')])
+
+    def test_more_complex_syllabification(self):
         self.assertEqual(_syllabletk.Syllabifier(
-                         u'strɐm', son_peak=True).as_tuples(),
-                         [(u'str', u'ɐ', u'm')])
+                         u'atrɐms', son_peak=True).as_tuples(),
+                         [(u'', u'a', u''), (u'tr', u'ɐ', u'ms')])
+
+    def test_pterodactyl_syllabification(self):
+        self.assertEqual(_syllabletk.Syllabifier(
+                         u'ptɛrodaktyl', son_peak=True).as_tuples(),
+                         [(u'pt', u'ɛ', u''), (u'r', u'o', u''),
+                          (u'd', u'a', u'k'), (u't', u'y', u'l')])
 
 
 class TestSyllableTK(unittest.TestCase):
@@ -25,8 +27,8 @@ class TestSyllableTK(unittest.TestCase):
         self.sa = _syllabletk.SyllableAnalyzer()
 
     def test_the_onsets(self):
-        ws = [u'strup', u'pum', u'ap']
-        results = [u'str', u'p', u'']
+        ws = [u'trup', u'pum', u'ap']
+        results = [u'tr', u'p', u'']
         self.assertEqual(self.sa.the_onsets(ws), results)
 
     def test_the_complex_onsets(self):

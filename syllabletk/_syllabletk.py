@@ -15,7 +15,7 @@ class Syllabifier(object):
 
     word -- Unicode IPA string
     """
-    def __init__(self, word, son_peak=False):
+    def __init__(self, word, son_peak=True):
         self.ft = panphon.FeatureTable()
         if son_peak:
             self.son_peak_parse(word)
@@ -23,52 +23,75 @@ class Syllabifier(object):
             self.son_parse(word)
 
     def son_peak_parse(self, word):
-        def is_peak(scores, i):
-            score = scores[i]
-            before = scores[i - 1]
-            after = scores[i + 1]
-            if score >= after and score >= before:
-                return True
-            else:
-                return False
+        def trace(cons, caller):
+            print(caller.strip())
+            print(u''.join(cons))
+            print(u''.join(map(str, scores)))
+            print(u''.join(word))
+
+        def mark_peaks_as_nuclei(scores, cons):
+            nuclei = []
+            for i in range(len(cons)):
+                # trace(cons, 'nuclei')
+                if i == 0:
+                    if scores[i] > scores[i + 1]:
+                        cons[i] = 'N'
+                        nuclei.append(i)
+                elif i == len(cons) - 1:
+                    if scores[i] > scores[i - 1]:
+                        cons[i] = 'N'
+                        nuclei.append(i)
+                else:
+                    if (scores[i] > scores[i - 1]) and \
+                       (scores[i] > scores[i + 1]):
+                        cons[i] = 'N'
+                        nuclei.append(i)
+            return cons, nuclei
+
+        def mark_left_slopes_as_onsets(scores, cons, nuclei):
+            for i in nuclei:
+                # trace(cons, 'onset')
+                j = i
+                while (j > 0 and
+                       cons[j - 1] == u' ' and
+                       scores[j] > scores[j - 1]):
+                    cons[j - 1] = u'O'
+                    j -= 1
+
+            return cons
+
+        def mark_right_slops_as_codas(scores, cons, nuclei):
+            for i in nuclei:
+                # trace(cons, 'coda')
+                j = i
+                while (j < len(cons) - 1 and
+                       cons[j + 1] == u' ' and
+                       scores[j] > scores[j + 1]):
+                    cons[j + 1] = u'C'
+                    j += 1
+            return cons
+
+        def mark_margins(cons):
+            i = 0
+            while cons[i] == u' ' and i < len(cons) - 1:
+                cons[i] = u'O'
+                i += 1
+            i = 0
+            while cons[i] == u' ' and i > 0:
+                cons[i] = u'C'
+                i -= 1
+            # trace(cons, 'margins')
+            return cons
+
         word = list(panphon.segment_text(word))
         scores = map(lambda x: self.ft.sonority(x), word)
-        scores = [-1] + scores + [-1]
-        constits = len(word) * [' ']
-        constits = [' '] + constits + [' ']
-        # Find nuclei
-        for i in range(1, len(scores) - 1):
-            if is_peak(scores, i):
-                constits[i] = 'N'
-        # Construct onsets.
-        for i, con in enumerate(constits):
-            if con == 'N':
-                j = i
-                while j > 0 \
-                        and scores[j - 1] < scores[j] \
-                        and constits[j - 1] == ' ':
-                    j -= 1
-                    constits[j] = 'O'
-        # Construct codas.
-        for i, con in enumerate(constits):
-            if con == 'N':
-                j = i
-                while j < len(word) - 1 \
-                        and scores[j] > scores[j + 1] \
-                        and constits[j + 1] == ' ':
-                    j += 1
-                    constits[j] = 'C'
-        # Leftover final Cs must be in coda.
-        i = len(constits) - 1
-        while constits[i] == ' ' and i > 0:
-            constits[i] = 'C'
-            i -= 1
-        # Finally, leftover Cs must be in onsets.
-        for i, con in enumerate(constits):
-            if con == ' ':
-                constits[i] = 'O'
+        cons = len(scores) * [' ']
+        cons, nuclei = mark_peaks_as_nuclei(scores, cons)
+        cons = mark_left_slopes_as_onsets(scores, cons, nuclei)
+        cons = mark_right_slops_as_codas(scores, cons, nuclei)
+        cons = mark_margins(cons)
         self.word = word
-        self.constituents = constits[1:-1]
+        self.constituents = cons
 
     def son_parse(self, word):
         word = list(panphon.segment_text(word))

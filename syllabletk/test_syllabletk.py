@@ -21,6 +21,12 @@ class TestSyllabifier(unittest.TestCase):
                          [(u'pt', u'ɛ', u''), (u'r', u'o', u''),
                           (u'd', u'a', u'k'), (u't', u'y', u'l')])
 
+    def test_german_fricative_syllabification(self):
+        self.assertEqual(_syllabletk.Syllabifier(
+                         u'ʃveʁɪxkajt', son_peak=True).as_tuples(),
+                         [(u'ʃv', u'e', u''), (u'ʁ', u'ɪ', u'x'),
+                          (u'k', u'aj', u't')])
+
 
 class TestSyllableTK(unittest.TestCase):
     def setUp(self):

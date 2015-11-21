@@ -48,10 +48,22 @@ class Syllabifier(object):
                         nuclei.append(i)
             return cons, nuclei
 
+        def mark_glides(scores, cons, nuclei):
+            for i in nuclei:
+                if i < len(cons):
+                    if cons[i + 1] == u' ' and scores[i + 1] == 7:
+                        cons[i + 1] = u')'
+                if i > 0:
+                    if cons[i - 1] == u' ' and scores[i - 1] == 7:
+                        cons[i - 1] = u'('
+            return cons
+
         def mark_left_slopes_as_onsets(scores, cons, nuclei):
             for i in nuclei:
                 # trace(cons, 'onset')
                 j = i
+                while cons[j] == u')':
+                    j += 1
                 while (j > 0 and
                        cons[j - 1] == u' ' and
                        scores[j] > scores[j - 1]):
@@ -64,6 +76,8 @@ class Syllabifier(object):
             for i in nuclei:
                 # trace(cons, 'coda')
                 j = i
+                while cons[j] == u'(':
+                    j -= 1
                 while (j < len(cons) - 1 and
                        cons[j + 1] == u' ' and
                        scores[j] > scores[j + 1]):
@@ -136,7 +150,7 @@ class Syllabifier(object):
     def as_tuples_iter(self):
         labels = ''.join(self.constituents)
         word = self.word
-        for m in re.finditer(ur'(O*)(N)(C*)', labels):
+        for m in re.finditer(ur'(O*)(\(*N\)*)(C*)', labels):
             o, n, c = len(m.group(1)), len(m.group(2)), len(m.group(3))
             ons = ''.join(word[:o])
             nuc = ''.join(word[o:o + n])

@@ -33,9 +33,9 @@ class Syllabifier(object):
                 return False
         word = list(panphon.segment_text(word))
         scores = map(lambda x: self.ft.sonority(x), word)
-        scores = [0] + scores + [0]
+        scores = [-1] + scores + [-1]
         constits = len(word) * [' ']
-        constits = ['<'] + constits + ['>']
+        constits = [' '] + constits + [' ']
         # Find nuclei
         for i in range(1, len(scores) - 1):
             if is_peak(scores, i):
@@ -59,7 +59,7 @@ class Syllabifier(object):
                     j += 1
                     constits[j] = 'C'
         # Leftover final Cs must be in coda.
-        i = len(word) - 1
+        i = len(constits) - 1
         while constits[i] == ' ' and i > 0:
             constits[i] = 'C'
             i -= 1

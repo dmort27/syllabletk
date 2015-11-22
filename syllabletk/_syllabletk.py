@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import logging
 import panphon
 import regex as re
 from types import ListType
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 def count_true(items):
@@ -32,27 +35,28 @@ class Syllabifier(object):
         """
 
         def trace(cons, caller):
-            print(u'{}\t{}'.format(u''.join(cons), caller))
-            print(u''.join(map(str, scores)))
-            print(u''.join(word))
+            logging.debug(u'{}\t{}'.format(u''.join(cons), caller))
+            logging.debug(u''.join(map(str, scores)))
+            logging.debug(u''.join(word))
 
         def mark_peaks_as_nuclei(scores, cons):
             nuclei = []
             for i in range(len(cons)):
                 if i == 0:
-                    if scores[i] > scores[i + 1]:
+                    if scores[i] > scores[i + 1] and scores[i] >= 5:
                         cons[i] = 'N'
                         nuclei.append(i)
                 elif i == len(cons) - 1:
-                    if scores[i] > scores[i - 1]:
+                    if scores[i] > scores[i - 1] and scores[i] >= 5:
                         cons[i] = 'N'
                         nuclei.append(i)
                 else:
                     if (scores[i] > scores[i - 1]) and \
-                       (scores[i] > scores[i + 1]):
+                       (scores[i] > scores[i + 1]) and \
+                       scores[i] >= 5:
                         cons[i] = 'N'
                         nuclei.append(i)
-                # trace(cons, 'nuclei')
+                trace(cons, 'nuclei')
             return cons, nuclei
 
         def mark_glides(scores, cons, nuclei):
@@ -63,7 +67,7 @@ class Syllabifier(object):
                 # if i > 0:
                 #     if cons[i - 1] == u' ' and scores[i - 1] == 7:
                 #         cons[i - 1] = u'('
-                # trace(cons, 'glide')
+                trace(cons, 'glide')
             return cons
 
         def mark_left_slopes_as_onsets(scores, cons, nuclei):
@@ -76,7 +80,7 @@ class Syllabifier(object):
                        scores[j] > scores[j - 1]):
                     cons[j - 1] = u'O'
                     j -= 1
-                # trace(cons, 'onset')
+                trace(cons, 'onset')
             return cons
 
         def mark_right_slops_as_codas(scores, cons, nuclei):
@@ -89,7 +93,7 @@ class Syllabifier(object):
                        scores[j] > scores[j + 1]):
                     cons[j + 1] = u'C'
                     j += 1
-                # trace(cons, 'coda')
+                trace(cons, 'coda')
             return cons
 
         def mark_margins(cons):
@@ -101,7 +105,7 @@ class Syllabifier(object):
             while cons[i] == u' ' and i > 0:
                 cons[i] = u'C'
                 i -= 1
-            # trace(cons, 'margins')
+            trace(cons, 'margins')
             return cons
 
         word = list(panphon.segment_text(word))

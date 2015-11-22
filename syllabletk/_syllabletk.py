@@ -101,7 +101,7 @@ class Syllabifier(object):
             while cons[i] == u' ' and i > 0:
                 cons[i] = u'C'
                 i -= 1
-            trace(cons, 'margins')
+            # trace(cons, 'margins')
             return cons
 
         word = list(panphon.segment_text(word))

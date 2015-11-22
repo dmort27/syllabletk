@@ -34,7 +34,6 @@ class TestSyllabifier(unittest.TestCase):
                           (u'l', u'ow', u'')])
 
 
-
 class TestSyllableTK(unittest.TestCase):
     def setUp(self):
         self.sa = _syllabletk.SyllableAnalyzer()

@@ -23,16 +23,21 @@ class Syllabifier(object):
             self.son_parse(word)
 
     def son_peak_parse(self, word):
+
+        """Syllabify a word using sonority peaks to identify nuclei and sonority
+        slopes to identify onsets and codas.
+
+        word -- a word to be syllabified as a Unicode IPA string.
+        """
+
         def trace(cons, caller):
-            print(caller.strip())
-            print(u''.join(cons))
+            print(u'{}\t{}'.format(u''.join(cons), caller))
             print(u''.join(map(str, scores)))
             print(u''.join(word))
 
         def mark_peaks_as_nuclei(scores, cons):
             nuclei = []
             for i in range(len(cons)):
-                # trace(cons, 'nuclei')
                 if i == 0:
                     if scores[i] > scores[i + 1]:
                         cons[i] = 'N'
@@ -46,6 +51,7 @@ class Syllabifier(object):
                        (scores[i] > scores[i + 1]):
                         cons[i] = 'N'
                         nuclei.append(i)
+                trace(cons, 'nuclei')
             return cons, nuclei
 
         def mark_glides(scores, cons, nuclei):
@@ -53,36 +59,36 @@ class Syllabifier(object):
                 if i < len(cons):
                     if cons[i + 1] == u' ' and scores[i + 1] == 7:
                         cons[i + 1] = u')'
-                if i > 0:
-                    if cons[i - 1] == u' ' and scores[i - 1] == 7:
-                        cons[i - 1] = u'('
+                # if i > 0:
+                #     if cons[i - 1] == u' ' and scores[i - 1] == 7:
+                #         cons[i - 1] = u'('
+                trace(cons, 'glide')
             return cons
 
         def mark_left_slopes_as_onsets(scores, cons, nuclei):
             for i in nuclei:
-                # trace(cons, 'onset')
                 j = i
-                while cons[j] == u')':
-                    j += 1
+                while cons[j - 1] == u'(':
+                    j -= 1
                 while (j > 0 and
                        cons[j - 1] == u' ' and
                        scores[j] > scores[j - 1]):
                     cons[j - 1] = u'O'
                     j -= 1
-
+                trace(cons, 'onset')
             return cons
 
         def mark_right_slops_as_codas(scores, cons, nuclei):
             for i in nuclei:
-                # trace(cons, 'coda')
                 j = i
-                while cons[j] == u'(':
-                    j -= 1
+                while cons[j + 1] == u')':
+                    j += 1
                 while (j < len(cons) - 1 and
                        cons[j + 1] == u' ' and
                        scores[j] > scores[j + 1]):
                     cons[j + 1] = u'C'
                     j += 1
+                trace(cons, 'coda')
             return cons
 
         def mark_margins(cons):
@@ -94,13 +100,14 @@ class Syllabifier(object):
             while cons[i] == u' ' and i > 0:
                 cons[i] = u'C'
                 i -= 1
-            # trace(cons, 'margins')
+            trace(cons, 'margins')
             return cons
 
         word = list(panphon.segment_text(word))
         scores = map(lambda x: self.ft.sonority(x), word)
         cons = len(scores) * [' ']
         cons, nuclei = mark_peaks_as_nuclei(scores, cons)
+        cons = mark_glides(scores, cons, nuclei)
         cons = mark_left_slopes_as_onsets(scores, cons, nuclei)
         cons = mark_right_slops_as_codas(scores, cons, nuclei)
         cons = mark_margins(cons)

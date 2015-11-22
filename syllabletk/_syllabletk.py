@@ -25,7 +25,8 @@ class Syllabifier(object):
     def son_peak_parse(self, word):
 
         """Syllabify a word using sonority peaks to identify nuclei and sonority
-        slopes to identify onsets and codas.
+        slopes to identify onsets and codas. Correctly handles falling-sonority
+        diphthongs but does not address rising-sonority diphthongs.
 
         word -- a word to be syllabified as a Unicode IPA string.
         """
@@ -51,44 +52,44 @@ class Syllabifier(object):
                        (scores[i] > scores[i + 1]):
                         cons[i] = 'N'
                         nuclei.append(i)
-                trace(cons, 'nuclei')
+                # trace(cons, 'nuclei')
             return cons, nuclei
 
         def mark_glides(scores, cons, nuclei):
             for i in nuclei:
-                if i < len(cons):
+                if i < len(cons) - 1:
                     if cons[i + 1] == u' ' and scores[i + 1] == 7:
                         cons[i + 1] = u')'
                 # if i > 0:
                 #     if cons[i - 1] == u' ' and scores[i - 1] == 7:
                 #         cons[i - 1] = u'('
-                trace(cons, 'glide')
+                # trace(cons, 'glide')
             return cons
 
         def mark_left_slopes_as_onsets(scores, cons, nuclei):
             for i in nuclei:
                 j = i
-                while cons[j - 1] == u'(':
+                while (j > 0 and cons[j - 1] == u'('):
                     j -= 1
                 while (j > 0 and
                        cons[j - 1] == u' ' and
                        scores[j] > scores[j - 1]):
                     cons[j - 1] = u'O'
                     j -= 1
-                trace(cons, 'onset')
+                # trace(cons, 'onset')
             return cons
 
         def mark_right_slops_as_codas(scores, cons, nuclei):
             for i in nuclei:
                 j = i
-                while cons[j + 1] == u')':
+                while (j < len(cons) - 1 and cons[j + 1] == u')'):
                     j += 1
                 while (j < len(cons) - 1 and
                        cons[j + 1] == u' ' and
                        scores[j] > scores[j + 1]):
                     cons[j + 1] = u'C'
                     j += 1
-                trace(cons, 'coda')
+                # trace(cons, 'coda')
             return cons
 
         def mark_margins(cons):

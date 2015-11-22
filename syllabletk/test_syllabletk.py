@@ -27,6 +27,13 @@ class TestSyllabifier(unittest.TestCase):
                          [(u'ʃv', u'e', u''), (u'ʁ', u'ɪ', u'x'),
                           (u'k', u'aj', u't')])
 
+    def test_english_phonetic_syllabification(self):
+        self.assertEqual(_syllabletk.Syllabifier(
+                         u'painsalow', son_peak=True).as_tuples(),
+                         [(u'p', u'ai', u'n'), (u's', u'a', u''),
+                          (u'l', u'ow', u'')])
+
+
 
 class TestSyllableTK(unittest.TestCase):
     def setUp(self):

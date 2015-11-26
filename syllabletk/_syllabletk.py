@@ -8,6 +8,10 @@ from types import ListType
 logging.basicConfig(level=logging.DEBUG)
 
 
+class FailedParse(Exception):
+    pass
+
+
 def count_true(items):
     """Return the number of elements in an iterable that evaluate as true."""
     return len([bool(x) for x in items if x])
@@ -24,6 +28,17 @@ class Syllabifier(object):
             self.son_peak_parse(word)
         else:
             self.son_parse(word)
+        self.check_parse()
+
+    def check_parse(self):
+        cons = ''.join(self.constituents)
+        word = ''.join(self.word)
+        if u' ' in self.constituents:
+            raise FailedParse(u'Unparsed segments ' +
+                              u'For {}, parsed {}.'.format(word, cons))
+        if u'N' not in self.constituents:
+            raise FailedParse(u'No nucleus ' +
+                              u'For {}, parsed {}.'.format(word, cons))
 
     def son_peak_parse(self, word):
 
@@ -43,11 +58,11 @@ class Syllabifier(object):
             nuclei = []
             for i in range(len(cons)):
                 if i == 0:
-                    if scores[i] > scores[i + 1] and scores[i] >= 5:
+                    if scores[i] > scores[i + 1] and scores[i] >= 6:
                         cons[i] = 'N'
                         nuclei.append(i)
                 elif i == len(cons) - 1:
-                    if scores[i] > scores[i - 1] and scores[i] >= 5:
+                    if scores[i] > scores[i - 1] and scores[i] >= 6:
                         cons[i] = 'N'
                         nuclei.append(i)
                 else:
@@ -89,8 +104,7 @@ class Syllabifier(object):
                 while (j < len(cons) - 1 and cons[j + 1] == u')'):
                     j += 1
                 while (j < len(cons) - 1 and
-                       cons[j + 1] == u' ' and
-                       scores[j] > scores[j + 1]):
+                       cons[j + 1] == u' ' and scores[j] > scores[j + 1]):
                     cons[j + 1] = u'C'
                     j += 1
                 trace(cons, 'coda')
@@ -225,8 +239,8 @@ class SyllableAnalyzer(object):
                    self.the_onsets(ws))
 
     def the_obstruent_approximant_onsets(self, ws):
-        regexp = self.ft.compile_regex_from_str(ur'[-syl -son -cons]' +
-                                                ur'[-syl +son +cont]')
+        regexp = self.ft.compile_regex_from_str(u'[-syl -son -cont]' +
+                                                u'[-syl +son +cont]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_onsets(ws))
 
@@ -238,7 +252,8 @@ class SyllableAnalyzer(object):
         return codas
 
     def the_simple_codas(self, ws):
-        return map(lambda x: 1.0 if x else 0.0,
+        regexp = self.ft
+        return map(lambda x: 1.0 if len(x) == 1 else 0.0,
                    self.the_codas(ws))
 
     def the_complex_codas(self, ws):
@@ -246,7 +261,7 @@ class SyllableAnalyzer(object):
                    self.the_codas(ws))
 
     def the_approximant_obstruent_codas(self, ws):
-        regexp = self.ft.compile_regex_from_str(ur'[-syl +son +cont]' +
-                                                ur'[-syl -son -cont]')
+        regexp = self.ft.compile_regex_from_str(u'[-syl +son +cont]' +
+                                                u'[-syl -son -cont]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_codas(ws))

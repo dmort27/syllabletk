@@ -33,30 +33,34 @@ class TestSyllabifier(unittest.TestCase):
                          [(u'p', u'ai', u'n'), (u's', u'a', u''),
                           (u'l', u'ow', u'')])
 
+    def test_diphthong_syllabification(self):
+        self.assertEqual(_syllabletk.Syllabifier(
+                         u'ʃɑɪnʃajn', son_peak=True).as_tuples(),
+                         [(u'ʃ', u'ɑɪ', u'n'), (u'ʃ', u'aj', u'n')])
 
 class TestSyllableTK(unittest.TestCase):
     def setUp(self):
         self.sa = _syllabletk.SyllableAnalyzer()
 
     def test_the_onsets(self):
-        ws = [u'trup', u'pum', u'ap']
-        results = [u'tr', u'p', u'']
+        ws = [u'trup', u'pum', u'ap', u'strupon']
+        results = [u'tr', u'p', u'', u'str', u'p']
         self.assertEqual(self.sa.the_onsets(ws), results)
 
     def test_the_complex_onsets(self):
-        ws = [u'strup', u'pum', u'ap']
-        results = [1.0, 0.0, 0.0]
+        ws = [u'trup', u'pum', u'ap', u'strupon']
+        results = [1.0, 0.0, 0.0, 1.0, 0.0]
         self.assertEqual(self.sa.the_complex_onsets(ws), results)
 
     def test_the_obstruent_approximant_onsets(self):
-        ws = [u'strup', u'pjum', u'kap']
+        ws = [u'tsup', u'pɹum', u'kap']
         results = [0.0, 1.0, 0.0]
         self.assertEqual(self.sa.the_obstruent_approximant_onsets(ws),
                          results)
 
     def test_the_codas(self):
-        ws = [u'hwelp', u'pewl', 'paw', 'plawd']
-        results = [u'lp', u'wl', u'w', u'wd']
+        ws = [u'hwelp', u'pewl', u'pa', u'plawd', u'taptap']
+        results = [u'lp', u'wl', u'', u'wd', u'p', u'p']
         self.assertEqual(self.sa.the_codas(ws), results)
 
     def test_the_simple_codas(self):
@@ -71,7 +75,7 @@ class TestSyllableTK(unittest.TestCase):
 
     def test_the_approximant_obstruent_codas(self):
         ws = [u'hwelp', u'pewl', 'paw', 'plawd']
-        results = [1.0, 1.0, 0.0, 1.0]
+        results = [1.0, 0.0, 0.0, 1.0]
         self.assertEqual(self.sa.the_approximant_obstruent_codas(ws),
                          results)
 

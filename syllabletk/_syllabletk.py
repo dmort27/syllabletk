@@ -31,14 +31,14 @@ class Syllabifier(object):
         self.check_parse()
 
     def check_parse(self):
-        cons = ''.join(self.constituents)
-        word = ''.join(self.word)
+        cons = u''.join(self.constituents).encode(u'utf-8')
+        word = u''.join(self.word).encode(u'utf-8')
         if u' ' in self.constituents:
-            raise FailedParse(u'Unparsed segments ' +
-                              u'For {}, parsed {}.'.format(word, cons))
+            raise FailedParse('Unparsed segments ' +
+                              'For "{}" parsed "{}".'.format(word, cons))
         if u'N' not in self.constituents:
-            raise FailedParse(u'No nucleus ' +
-                              u'For {}, parsed {}.'.format(word, cons))
+            raise FailedParse('No nucleus ' +
+                              'For "{}", parsed "{}".'.format(word, cons))
 
     def son_peak_parse(self, word):
 
@@ -77,11 +77,8 @@ class Syllabifier(object):
         def mark_glides(scores, cons, nuclei):
             for i in nuclei:
                 if i < len(cons) - 1:
-                    if cons[i + 1] == u' ' and scores[i + 1] == 7:
+                    if cons[i + 1] == u' ' and scores[i + 1] >= 6:
                         cons[i + 1] = u')'
-                # if i > 0:
-                #     if cons[i - 1] == u' ' and scores[i - 1] == 7:
-                #         cons[i - 1] = u'('
                 trace(cons, 'glide')
             return cons
 
@@ -101,12 +98,15 @@ class Syllabifier(object):
         def mark_right_slops_as_codas(scores, cons, nuclei):
             for i in nuclei:
                 j = i
+                logging.debug('index j={} before increment.'.format(j))
                 while (j < len(cons) - 1 and cons[j + 1] == u')'):
                     j += 1
+                    logging.debug('index j={} after glide.'.format(j))
                 while (j < len(cons) - 1 and
                        cons[j + 1] == u' ' and scores[j] > scores[j + 1]):
                     cons[j + 1] = u'C'
                     j += 1
+                    logging.debug('index j={} after coda.'.format(j))
                 trace(cons, 'coda')
             return cons
 

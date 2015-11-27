@@ -77,7 +77,7 @@ class Syllabifier(object):
         def mark_glides(scores, cons, nuclei):
             for i in nuclei:
                 if i < len(cons) - 1:
-                    if cons[i + 1] == u' ' and scores[i + 1] >= 6:
+                    if cons[i + 1] == u' ' and scores[i + 1] >= 7:
                         cons[i + 1] = u')'
                 trace(cons, 'glide')
             return cons

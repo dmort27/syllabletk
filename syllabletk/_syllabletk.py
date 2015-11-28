@@ -5,7 +5,7 @@ import panphon
 import regex as re
 from types import ListType
 
-logging.basicConfig(level=logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG)
 
 
 class FailedParse(Exception):
@@ -115,7 +115,7 @@ class Syllabifier(object):
             while cons[i] == u' ' and i < len(cons) - 1:
                 cons[i] = u'O'
                 i += 1
-            i = 0
+            i = len(cons) - 1
             while cons[i] == u' ' and i > 0:
                 cons[i] = u'C'
                 i -= 1
@@ -234,16 +234,6 @@ class SyllableAnalyzer(object):
             onsets += ons
         return onsets
 
-    def the_complex_onsets(self, ws):
-        return map(lambda x: 1.0 if len(x) > 1 else 0.0,
-                   self.the_onsets(ws))
-
-    def the_obstruent_approximant_onsets(self, ws):
-        regexp = self.ft.compile_regex_from_str(u'[-syl -son -cont]' +
-                                                u'[-syl +son +cont]')
-        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
-                   self.the_onsets(ws))
-
     def the_codas(self, ws):
         codas = []
         for w in ws:
@@ -251,8 +241,71 @@ class SyllableAnalyzer(object):
             codas += cod
         return codas
 
+    def the_obstruent_sonorant_onsets(self, ws):
+        regexp = self.ft.compile_regex_from_str(u'[-syl -son]' +
+                                                u'[-syl +son]')
+        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
+                   self.the_onsets(ws))
+
+    def the_plosive_sonorant_onsets(self, ws):
+        regexp = self.ft.compile_regex_from_str(u'[-syl -son -cont]' +
+                                                u'[-syl +son]')
+        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
+                   self.the_onsets(ws))
+
+    def the_obstruent_approximant_onsets(self, ws):
+        regexp = self.ft.compile_regex_from_str(u'[-syl -son]' +
+                                                u'[-syl +son +cont]')
+        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
+                   self.the_onsets(ws))
+
+    def the_plosive_approximant_onsets(self, ws):
+        regexp = self.ft.compile_regex_from_str(u'[-syl -son -cont]' +
+                                                u'[-syl +son +cont]')
+        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
+                   self.the_onsets(ws))
+
+    def the_obstruent_obstruent_onsets(self, ws):
+        regexp = self.ft.compile_regex_from_str(u'[-syl -son]' +
+                                                u'[-syl -son]')
+        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
+                   self.the_onsets(ws))
+
+    def the_plosive_plosive_onsets(self, ws):
+        regexp = self.ft.compile_regex_from_str(u'[-syl -son -cont]' +
+                                                u'[-syl -son -cont]')
+        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
+                   self.the_onsets(ws))
+
+    def the_sonorant_sonorant_onsets(self, ws):
+        regexp = self.ft.compile_regex_from_str(u'[-syl +son]' +
+                                                u'[-syl +son]')
+        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
+                   self.the_onsets(ws))
+
+    def the_nasal_nasal_onsets(self, ws):
+        regexp = self.ft.compile_regex_from_str(u'[-syl +son +nas]' +
+                                                u'[-syl +son +nas]')
+        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
+                   self.the_onsets(ws))
+
+    def the_complex_onsets(self, ws):
+        return map(lambda x: 1.0 if len(x) > 1 else 0.0,
+                   self.the_onsets(ws))
+
+    def the_complex_onsets_2(self, ws):
+        return map(lambda x: 1.0 if len(x) == 2 else 0.0,
+                   self.the_onsets(ws))
+
+    def the_complex_onsets_3(self, ws):
+        return map(lambda x: 1.0 if len(x) == 3 else 0.0,
+                   self.the_onsets(ws))
+
+    def the_complex_onsets_4_or_more(self, ws):
+        return map(lambda x: 1.0 if len(x) >= 4 else 0.0,
+                   self.the_onsets(ws))
+
     def the_simple_codas(self, ws):
-        regexp = self.ft
         return map(lambda x: 1.0 if len(x) == 1 else 0.0,
                    self.the_codas(ws))
 

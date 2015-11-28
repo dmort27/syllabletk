@@ -47,21 +47,78 @@ class TestSyllableTK(unittest.TestCase):
         results = [u'tr', u'pɹ', u'', u'str', u'p']
         self.assertEqual(self.sa.the_onsets(ws), results)
 
+    def test_the_codas(self):
+        ws = [u'hwelp', u'pewl', u'pa', u'plawd', u'taptap']
+        results = [u'lp', u'l', u'', u'd', u'p', u'p']
+        self.assertEqual(self.sa.the_codas(ws), results)
+
+    def test_the_obstruent_sonorant_onsets(self):
+        ws = [u'smaks', u'tliŋ', u'stap']
+        results = [1.0, 1.0, 0.0]
+        self.assertEqual(self.sa.the_obstruent_sonorant_onsets(ws),
+                         results)
+
+    def test_the_plosive_sonorant_onsets(self):
+        ws = [u'pwak', u'snasplam', u'kap']
+        results = [1.0, 0.0, 1.0, 0.0]
+        self.assertEqual(self.sa.the_plosive_sonorant_onsets(ws),
+                         results)
+
+    def test_the_obstruent_approximant_onsets(self):
+        ws = [u'tsup', u'pɹum', u'klap']
+        results = [0.0, 1.0, 1.0]
+        self.assertEqual(self.sa.the_obstruent_approximant_onsets(ws),
+                         results)
+
+    def test_the_plosive_approximant_onsets(self):
+        ws = [u'tlup', u'pɹum', u'kwap', u'mleg']
+        results = [1.0, 1.0, 1.0, 0.0]
+        self.assertEqual(self.sa.the_plosive_approximant_onsets(ws),
+                         results)
+
+    def test_the_obstruent_obstruent_onsets(self):
+        ws = [u'skup', u'ptum', u'kwap', u'mleg']
+        results = [1.0, 1.0, 0.0, 0.0]
+        self.assertEqual(self.sa.the_obstruent_obstruent_onsets(ws),
+                         results)
+
+    def test_the_plosive_plosive_onsets(self):
+        ws = [u'ptuk', u'pɹum', u'kwap', u'gbo']
+        results = [1.0, 0.0, 0.0, 1.0]
+        self.assertEqual(self.sa.the_plosive_plosive_onsets(ws),
+                         results)
+
+    def test_the_sonorant_sonorant_onsets(self):
+        ws = [u'mloŋ', u'mnemonik']
+        results = [1.0, 1.0, 0.0, 0.0]
+        self.assertEqual(self.sa.the_sonorant_sonorant_onsets(ws),
+                         results)
+
+    def test_the_nasal_nasal_onsets(self):
+        ws = [u'mloŋ', u'mnemonik']
+        results = [0.0, 1.0, 0.0, 0.0]
+        self.assertEqual(self.sa.the_nasal_nasal_onsets(ws),
+                         results)
+
     def test_the_complex_onsets(self):
         ws = [u'trup', u'pɹum', u'ap', u'strupon']
         results = [1.0, 1.0, 0.0, 1.0, 0.0]
         self.assertEqual(self.sa.the_complex_onsets(ws), results)
 
-    def test_the_obstruent_approximant_onsets(self):
-        ws = [u'tsup', u'pɹum', u'kap']
-        results = [0.0, 1.0, 0.0]
-        self.assertEqual(self.sa.the_obstruent_approximant_onsets(ws),
-                         results)
+    def test_the_complex_onsets_2(self):
+        ws = [u'trup', u'pɹum', u'ap', u'strupon']
+        results = [1.0, 1.0, 0.0, 0.0, 0.0]
+        self.assertEqual(self.sa.the_complex_onsets_2(ws), results)
 
-    def test_the_codas(self):
-        ws = [u'hwelp', u'pewl', u'pa', u'plawd', u'taptap']
-        results = [u'lp', u'l', u'', u'd', u'p', u'p']
-        self.assertEqual(self.sa.the_codas(ws), results)
+    def test_the_complex_onsets_3(self):
+        ws = [u'trup', u'spɹum', u'ap', u'strupon']
+        results = [0.0, 1.0, 0.0, 1.0, 0.0]
+        self.assertEqual(self.sa.the_complex_onsets_3(ws), results)
+
+    def test_the_complex_onsets_4_or_more(self):
+        ws = [u'trup', u'pɹum', u'ntsjap', u'pzlwustplon']
+        results = [0.0, 0.0, 1.0, 1.0, 0.0]
+        self.assertEqual(self.sa.the_complex_onsets_4_or_more(ws), results)
 
     def test_the_simple_codas(self):
         ws = [u'ka', u'rysp', u'ʃpil']

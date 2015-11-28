@@ -24,10 +24,13 @@ Syllable analyzer provides a variety of methods for identifying syllable-structu
 * codas
   + [x] SYL_COD_SIMPLE
   + [x] SYL_COD_COMPLEX
-  + [ ] SYL_COD_SON_OBS
-  + [ ] SYL_COD_SON_PLOS
+  + [x] SYL_COD_SON_OBS
+  + [x] SYL_COD_SON_PLOS
   + [x] SYL_COD_APPROX_OBS
-  + [ ] SYL_COD_APPROX_PLOS
-  + [ ] SYL_COD_COMPLEX_MAX_2
-  + [ ] SYL_COD_COMPLEX_MAX_3
-  + [ ] SYL_COD_COMPLEX_MAX_4_OR_MORE
+  + [x] SYL_COD_APPROX_PLOS
+  + [x] SYL_COD_SON_SON
+  + [x] SYL_COD_APPROX_APPROX
+  + [x] SYL_COD_PLOS_PLOS
+  + [x] SYL_COD_COMPLEX_2
+  + [x] SYL_COD_COMPLEX_3
+  + [x] SYL_COD_COMPLEX_4_OR_MORE

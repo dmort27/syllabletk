@@ -41,7 +41,6 @@ class Syllabifier(object):
                               'For "{}", parsed "{}".'.format(word, cons))
 
     def son_peak_parse(self, word):
-
         """Syllabify a word using sonority peaks to identify nuclei and sonority
         slopes to identify onsets and codas. Correctly handles falling-sonority
         diphthongs but does not address rising-sonority diphthongs.
@@ -204,15 +203,55 @@ class SyllableAnalyzer(object):
     def __init__(self):
         self.ft = panphon.FeatureTable()
         self.features = [
-            # Language allows complex onsets
-            ('SYL_ONS_COMPLEX',
-             self.the_complex_onsets),
+            # Language allows obstruent-sonorant onsets
+            ('SYL_ONS_OBS_SON',
+             self.the_obstruent_sonorant_onsets),
+
+            # Language allows plosive-sonorant onsets
+            ('SYL_ONS_PLOS_SON',
+             self.the_plosive_sonorant_onsets),
 
             # Language allows obstruent-approximant onsets
             ('SYL_ONS_OBS_APPROX',
              self.the_obstruent_approximant_onsets),
 
-            # Language allows codas
+            # Language allows plosive-approximant onsets
+            ('SYL_ONS_PLOS_APPROX',
+             self.the_plosive_approximant_onsets),
+
+            # Language allows obstruent-obstruent onsets
+            ('SYL_ONS_OBS_OBS',
+             self.the_obstruent_obstruent_onsets),
+
+            # Language allows plosive-plosive onsets
+            ('SYL_ONS_PLOS_PLOS',
+             self.the_plosive_plosive_onsets),
+
+            # Language allows sonorant-sonorant onsets
+            ('SYL_ONS_SON_SON',
+             self.the_sonorant_sonorant_onsets),
+
+            # Language allows nasal-nasal onsets
+            ('SYL_ONS_NAS_NAS',
+             self.the_nasal_nasal_onsets),
+
+            # Language allows complex onsets
+            ('SYL_ONS_COMPLEX',
+             self.the_complex_onsets),
+
+            # Language allows complex onsets with 2 consonants
+            ('SYL_ONS_COMPLEX_2',
+             self.the_complex_onsets_2),
+
+            # Language allows complex onsets with 3 consonants
+            ('SYL_ONS_COMPLEX_3',
+             self.the_complex_onsets_3),
+
+            # Language allows complex onsets with 4 or more consonants
+            ('SYL_ONS_COMPLEX_4_OR_MORE',
+             self.the_complex_onsets_4_or_more),
+
+            # Language allows simple codas
             ('SYL_COD_SIMPLE',
              self.the_simple_codas),
 
@@ -241,6 +280,7 @@ class SyllableAnalyzer(object):
             codas += cod
         return codas
 
+    # Types of onsets
     def the_obstruent_sonorant_onsets(self, ws):
         regexp = self.ft.compile_regex_from_str(u'[-syl -son]' +
                                                 u'[-syl +son]')
@@ -305,6 +345,49 @@ class SyllableAnalyzer(object):
         return map(lambda x: 1.0 if len(x) >= 4 else 0.0,
                    self.the_onsets(ws))
 
+    # Types of codas
+    def the_sonorant_obstruent_codas(self, ws):
+        regexp = self.ft.compile_regex_from_str(u'[-syl +son]' +
+                                                u'[-syl -son]')
+        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
+                   self.the_codas(ws))
+
+    def the_sonorant_plosive_codas(self, ws):
+        regexp = self.ft.compile_regex_from_str(u'[-syl +son]' +
+                                                u'[-syl -son -cont]')
+        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
+                   self.the_codas(ws))
+
+    def the_approximant_obstruent_codas(self, ws):
+        regexp = self.ft.compile_regex_from_str(u'[-syl +son +cont]' +
+                                                u'[-syl -son]')
+        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
+                   self.the_codas(ws))
+
+    def the_approximant_plosive_codas(self, ws):
+        regexp = self.ft.compile_regex_from_str(u'[-syl +son +cont]' +
+                                                u'[-syl -son -cont]')
+        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
+                   self.the_codas(ws))
+
+    def the_approximant_sonorant_sonorant(self, ws):
+        regexp = self.ft.compile_regex_from_str(u'[-syl +son]' +
+                                                u'[-syl +son]')
+        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
+                   self.the_codas(ws))
+
+    def the_approximant_approximant_codas(self, ws):
+        regexp = self.ft.compile_regex_from_str(u'[-syl +son +cont]' +
+                                                u'[-syl +son +cont]')
+        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
+                   self.the_codas(ws))
+
+    def the_plosive_plosive_codas(self, ws):
+        regexp = self.ft.compile_regex_from_str(u'[-syl -son -cont]' +
+                                                u'[-syl -son -cont]')
+        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
+                   self.the_codas(ws))
+
     def the_simple_codas(self, ws):
         return map(lambda x: 1.0 if len(x) == 1 else 0.0,
                    self.the_codas(ws))
@@ -313,8 +396,14 @@ class SyllableAnalyzer(object):
         return map(lambda x: 1.0 if len(x) > 1 else 0.0,
                    self.the_codas(ws))
 
-    def the_approximant_obstruent_codas(self, ws):
-        regexp = self.ft.compile_regex_from_str(u'[-syl +son +cont]' +
-                                                u'[-syl -son -cont]')
-        return map(lambda x: 1.0 if regexp.match(x) else 0.0,
+    def the_complex_codas_2(self, ws):
+        return map(lambda x: 1.0 if len(x) == 2 else 0.0,
+                   self.the_codas(ws))
+
+    def the_complex_codas_3(self, ws):
+        return map(lambda x: 1.0 if len(x) == 3 else 0.0,
+                   self.the_codas(ws))
+
+    def the_complex_codas_4_or_more(self, ws):
+        return map(lambda x: 1.0 if len(x) >= 4 else 0.0,
                    self.the_codas(ws))

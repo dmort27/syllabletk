@@ -38,6 +38,7 @@ class TestSyllabifier(unittest.TestCase):
                          u'ʃɑɪnʃajn', son_peak=True).as_tuples(),
                          [(u'ʃ', u'ɑɪ', u'n'), (u'ʃ', u'aj', u'n')])
 
+
 class TestSyllableTK(unittest.TestCase):
     def setUp(self):
         self.sa = _syllabletk.SyllableAnalyzer()

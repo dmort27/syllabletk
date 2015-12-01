@@ -194,9 +194,10 @@ class Syllabifier(object):
         return list(self.as_strings_iter())
 
 
-class SyllableAnalyzer(object):
-    """Provide rule-based analysis of the syllabic structure of a iterable
-    stream of words.
+class SyllableAnalyzerDepr(object):
+    """
+    Deprecated. Provide rule-based analysis of the syllabic structure of a
+    iterable stream of words.
 
     words -- an iterable of Unicode IPA strings.
     """

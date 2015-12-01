@@ -15,22 +15,22 @@ Syllable analyzer provides a variety of methods for identifying syllable-structu
   + [x] SYL_ONS_PLOS_APPROX
   + [x] SYL_ONS_OBS_OBS
   + [x] SYL_ONS_PLOS_PLOS
-  + [x] SYL_ONS_SON_SON
-  + [x] SYL_ONS_NAS_NAS
-  + [x] SYL_ONS_COMPLEX
-  + [x] SYL_ONS_COMPLEX_2
-  + [x] SYL_ONS_COMPLEX_3
-  + [x] SYL_ONS_COMPLEX_4_OR_MORE
+  + [ ] SYL_ONS_SON_SON
+  + [ ] SYL_ONS_NAS_NAS
+  + [ ] SYL_ONS_COMPLEX
+  + [ ] SYL_ONS_COMPLEX_2
+  + [ ] SYL_ONS_COMPLEX_3
+  + [ ] SYL_ONS_COMPLEX_4_lOR_MORE
 * codas
-  + [x] SYL_COD_SIMPLE
-  + [x] SYL_COD_COMPLEX
-  + [x] SYL_COD_SON_OBS
-  + [x] SYL_COD_SON_PLOS
-  + [x] SYL_COD_APPROX_OBS
-  + [x] SYL_COD_APPROX_PLOS
-  + [x] SYL_COD_SON_SON
-  + [x] SYL_COD_APPROX_APPROX
-  + [x] SYL_COD_PLOS_PLOS
-  + [x] SYL_COD_COMPLEX_2
-  + [x] SYL_COD_COMPLEX_3
-  + [x] SYL_COD_COMPLEX_4_OR_MORE
+  + [ ] SYL_COD_SON_OBS
+  + [ ] SYL_COD_SON_PLOS
+  + [ ] SYL_COD_APPROX_OBS
+  + [ ] SYL_COD_APPROX_PLOS
+  + [ ] SYL_COD_SON_SON
+  + [ ] SYL_COD_APPROX_APPROX
+  + [ ] SYL_COD_PLOS_PLOS
+  + [ ] SYL_COD_SIMPLE
+  + [ ] SYL_COD_COMPLEX
+  + [ ] SYL_COD_COMPLEX_2
+  + [ ] SYL_COD_COMPLEX_3
+  + [ ] SYL_COD_COMPLEX_4_OR_MORE

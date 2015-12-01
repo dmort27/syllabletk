@@ -39,6 +39,8 @@ class TestSyllabifier(unittest.TestCase):
                          [(u'ʃ', u'ɑɪ', u'n'), (u'ʃ', u'aj', u'n')])
 
 
+# Deprecated due to deprecation of _syllabletk.SyllableAnalyzer.
+
 class TestSyllableTK(unittest.TestCase):
     def setUp(self):
         self.sa = _syllabletk.SyllableAnalyzer()

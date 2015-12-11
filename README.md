@@ -15,10 +15,10 @@ Syllable analyzer provides a variety of methods for identifying syllable-structu
   + [x] SYL_ONS_PLOS_APPROX
   + [x] SYL_ONS_OBS_OBS
   + [x] SYL_ONS_PLOS_PLOS
-  + [ ] SYL_ONS_SON_SON
-  + [ ] SYL_ONS_NAS_NAS
+  + [x] SYL_ONS_SON_SON
+  + [x] SYL_ONS_NAS_NAS
   + [ ] SYL_ONS_COMPLEX
-  + [ ] SYL_ONS_COMPLEX_2
+  + [x] SYL_ONS_COMPLEX_2
   + [ ] SYL_ONS_COMPLEX_3
   + [ ] SYL_ONS_COMPLEX_4_lOR_MORE
 * codas

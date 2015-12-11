@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function, unicode_literals
 
 import logging
 import panphon
@@ -18,25 +19,26 @@ def count_true(items):
 
 
 class Syllabifier(object):
-    """Syllabifies words of text.
-
-    word -- Unicode IPA string
-    """
     def __init__(self, word, son_peak=True):
+        """Syllabifies words of text.
+
+        word -- Unicode IPA string
+        """
         self.ft = panphon.FeatureTable()
         if son_peak:
             self.son_peak_parse(word)
         else:
             self.son_parse(word)
-        self.check_parse()
+        self._check_parse()
 
-    def check_parse(self):
-        cons = u''.join(self.constituents).encode(u'utf-8')
-        word = u''.join(self.word).encode(u'utf-8')
-        if u' ' in self.constituents:
+    def _check_parse(self):
+        # Check whether the current parse is valid.
+        cons = ''.join(self.constituents).encode('utf-8')
+        word = ''.join(self.word).encode('utf-8')
+        if ' ' in self.constituents:
             raise FailedParse('Unparsed segments ' +
                               'For "{}" parsed "{}".'.format(word, cons))
-        if u'N' not in self.constituents:
+        if 'N' not in self.constituents:
             raise FailedParse('No nucleus ' +
                               'For "{}", parsed "{}".'.format(word, cons))
 
@@ -49,11 +51,13 @@ class Syllabifier(object):
         """
 
         def trace(cons, caller):
-            logging.debug(u'{}\t{}'.format(u''.join(cons), caller))
-            logging.debug(u''.join(map(str, scores)))
-            logging.debug(u''.join(word))
+            # Call debugging traces if log level is set to DEBUG.
+            logging.debug('{}\t{}'.format(''.join(cons), caller))
+            logging.debug(''.join(map(str, scores)))
+            logging.debug(''.join(word))
 
         def mark_peaks_as_nuclei(scores, cons):
+            # Mark the sonority peaks in a word as nuclei ('N').
             nuclei = []
             for i in range(len(cons)):
                 if i == 0:
@@ -74,49 +78,54 @@ class Syllabifier(object):
             return cons, nuclei
 
         def mark_glides(scores, cons, nuclei):
+            # Mark glides following a nucleus as offglides (')'). The method
+            # does not handle rising-sonority diphthongs.
             for i in nuclei:
                 if i < len(cons) - 1:
-                    if cons[i + 1] == u' ' and scores[i + 1] >= 7:
-                        cons[i + 1] = u')'
+                    if cons[i + 1] == ' ' and scores[i + 1] >= 7:
+                        cons[i + 1] = ')'
                 trace(cons, 'glide')
             return cons
 
         def mark_left_slopes_as_onsets(scores, cons, nuclei):
+            # Mark the left slopes prceding the peak as onsets.
             for i in nuclei:
                 j = i
-                while (j > 0 and cons[j - 1] == u'('):
+                while (j > 0 and cons[j - 1] == '('):
                     j -= 1
                 while (j > 0 and
-                       cons[j - 1] == u' ' and
+                       cons[j - 1] == ' ' and
                        scores[j] > scores[j - 1]):
-                    cons[j - 1] = u'O'
+                    cons[j - 1] = 'O'
                     j -= 1
                 trace(cons, 'onset')
             return cons
 
         def mark_right_slops_as_codas(scores, cons, nuclei):
+            # Mark the right slope following the nuclei as codas.
             for i in nuclei:
                 j = i
                 logging.debug('index j={} before increment.'.format(j))
-                while (j < len(cons) - 1 and cons[j + 1] == u')'):
+                while (j < len(cons) - 1 and cons[j + 1] == ')'):
                     j += 1
                     logging.debug('index j={} after glide.'.format(j))
                 while (j < len(cons) - 1 and
-                       cons[j + 1] == u' ' and scores[j] > scores[j + 1]):
-                    cons[j + 1] = u'C'
+                       cons[j + 1] == ' ' and scores[j] > scores[j + 1]):
+                    cons[j + 1] = 'C'
                     j += 1
                     logging.debug('index j={} after coda.'.format(j))
                 trace(cons, 'coda')
             return cons
 
         def mark_margins(cons):
+            # Take the marginal residues and mark them as onsets and codas.
             i = 0
-            while cons[i] == u' ' and i < len(cons) - 1:
-                cons[i] = u'O'
+            while cons[i] == ' ' and i < len(cons) - 1:
+                cons[i] = 'O'
                 i += 1
             i = len(cons) - 1
-            while cons[i] == u' ' and i > 0:
-                cons[i] = u'C'
+            while cons[i] == ' ' and i > 0:
+                cons[i] = 'C'
                 i -= 1
             trace(cons, 'margins')
             return cons
@@ -133,6 +142,10 @@ class Syllabifier(object):
         self.constituents = cons
 
     def son_parse(self, word):
+        """Parse based on absolute sonority. Likely to be deprecated.
+
+        word - word as Unicode IPA string
+        """
         word = list(panphon.segment_text(word))
         scores = map(lambda x: self.ft.sonority(x), word)
         constituents = len(word) * [' ']
@@ -173,6 +186,7 @@ class Syllabifier(object):
         self.constituents = constituents
 
     def as_tuples_iter(self):
+        """Yield the syllables in Syllabifier as an interator over tuples."""
         labels = ''.join(self.constituents)
         word = self.word
         for m in re.finditer(ur'(O*)(\(*N\)*)(C*)', labels):
@@ -184,13 +198,16 @@ class Syllabifier(object):
             word = word[o + n + c:]
 
     def as_tuples(self):
+        """Return the syllables in Syllabifier as a list of tuples."""
         return list(self.as_tuples_iter())
 
     def as_strings_iter(self):
+        """Yield one string per syllable in Syllabifier."""
         for (o, n, c) in self.as_tuples_iter():
             yield o + n + c
 
     def as_strings(self):
+        """Return one string per syllable in Syllabifier."""
         return list(self.as_strings_iter())
 
 
@@ -283,50 +300,50 @@ class SyllableAnalyzerDepr(object):
 
     # Types of onsets
     def the_obstruent_sonorant_onsets(self, ws):
-        regexp = self.ft.compile_regex_from_str(u'[-syl -son]' +
-                                                u'[-syl +son]')
+        regexp = self.ft.compile_regex_from_str('[-syl -son]' +
+                                                '[-syl +son]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_onsets(ws))
 
     def the_plosive_sonorant_onsets(self, ws):
-        regexp = self.ft.compile_regex_from_str(u'[-syl -son -cont]' +
-                                                u'[-syl +son]')
+        regexp = self.ft.compile_regex_from_str('[-syl -son -cont]' +
+                                                '[-syl +son]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_onsets(ws))
 
     def the_obstruent_approximant_onsets(self, ws):
-        regexp = self.ft.compile_regex_from_str(u'[-syl -son]' +
-                                                u'[-syl +son +cont]')
+        regexp = self.ft.compile_regex_from_str('[-syl -son]' +
+                                                '[-syl +son +cont]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_onsets(ws))
 
     def the_plosive_approximant_onsets(self, ws):
-        regexp = self.ft.compile_regex_from_str(u'[-syl -son -cont]' +
-                                                u'[-syl +son +cont]')
+        regexp = self.ft.compile_regex_from_str('[-syl -son -cont]' +
+                                                '[-syl +son +cont]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_onsets(ws))
 
     def the_obstruent_obstruent_onsets(self, ws):
-        regexp = self.ft.compile_regex_from_str(u'[-syl -son]' +
-                                                u'[-syl -son]')
+        regexp = self.ft.compile_regex_from_str('[-syl -son]' +
+                                                '[-syl -son]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_onsets(ws))
 
     def the_plosive_plosive_onsets(self, ws):
-        regexp = self.ft.compile_regex_from_str(u'[-syl -son -cont]' +
-                                                u'[-syl -son -cont]')
+        regexp = self.ft.compile_regex_from_str('[-syl -son -cont]' +
+                                                '[-syl -son -cont]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_onsets(ws))
 
     def the_sonorant_sonorant_onsets(self, ws):
-        regexp = self.ft.compile_regex_from_str(u'[-syl +son]' +
-                                                u'[-syl +son]')
+        regexp = self.ft.compile_regex_from_str('[-syl +son]' +
+                                                '[-syl +son]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_onsets(ws))
 
     def the_nasal_nasal_onsets(self, ws):
-        regexp = self.ft.compile_regex_from_str(u'[-syl +son +nas]' +
-                                                u'[-syl +son +nas]')
+        regexp = self.ft.compile_regex_from_str('[-syl +son +nas]' +
+                                                '[-syl +son +nas]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_onsets(ws))
 
@@ -348,44 +365,44 @@ class SyllableAnalyzerDepr(object):
 
     # Types of codas
     def the_sonorant_obstruent_codas(self, ws):
-        regexp = self.ft.compile_regex_from_str(u'[-syl +son]' +
-                                                u'[-syl -son]')
+        regexp = self.ft.compile_regex_from_str('[-syl +son]' +
+                                                '[-syl -son]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_codas(ws))
 
     def the_sonorant_plosive_codas(self, ws):
-        regexp = self.ft.compile_regex_from_str(u'[-syl +son]' +
-                                                u'[-syl -son -cont]')
+        regexp = self.ft.compile_regex_from_str('[-syl +son]' +
+                                                '[-syl -son -cont]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_codas(ws))
 
     def the_approximant_obstruent_codas(self, ws):
-        regexp = self.ft.compile_regex_from_str(u'[-syl +son +cont]' +
-                                                u'[-syl -son]')
+        regexp = self.ft.compile_regex_from_str('[-syl +son +cont]' +
+                                                '[-syl -son]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_codas(ws))
 
     def the_approximant_plosive_codas(self, ws):
-        regexp = self.ft.compile_regex_from_str(u'[-syl +son +cont]' +
-                                                u'[-syl -son -cont]')
+        regexp = self.ft.compile_regex_from_str('[-syl +son +cont]' +
+                                                '[-syl -son -cont]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_codas(ws))
 
     def the_approximant_sonorant_sonorant(self, ws):
-        regexp = self.ft.compile_regex_from_str(u'[-syl +son]' +
-                                                u'[-syl +son]')
+        regexp = self.ft.compile_regex_from_str('[-syl +son]' +
+                                                '[-syl +son]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_codas(ws))
 
     def the_approximant_approximant_codas(self, ws):
-        regexp = self.ft.compile_regex_from_str(u'[-syl +son +cont]' +
-                                                u'[-syl +son +cont]')
+        regexp = self.ft.compile_regex_from_str('[-syl +son +cont]' +
+                                                '[-syl +son +cont]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_codas(ws))
 
     def the_plosive_plosive_codas(self, ws):
-        regexp = self.ft.compile_regex_from_str(u'[-syl -son -cont]' +
-                                                u'[-syl -son -cont]')
+        regexp = self.ft.compile_regex_from_str('[-syl -son -cont]' +
+                                                '[-syl -son -cont]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_codas(ws))
 

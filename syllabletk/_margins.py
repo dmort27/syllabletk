@@ -7,8 +7,7 @@ import logging
 logging.basicConfig(logging=logging.DEBUG)
 
 
-class MarginMinder(object):
-
+class MarginSniffer(object):
     def __init__(self, margin_parser):
         self.margin_parser = margin_parser()
         self.initial, self.final = Counter(), Counter()
@@ -16,8 +15,11 @@ class MarginMinder(object):
     def parse_tokens(self, tokens):
         for token in tokens:
             initial, final = self.margin_parser.parse(token)
-            self.initial.update(initial)
-            self.final.update(final)
+            self.initial[initial] += 1
+            self.final[final] += 1
+
+    def get_counters(self):
+        return (self.initial, self.final)
 
 
 class WordMarginParser(object):

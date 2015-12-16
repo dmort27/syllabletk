@@ -3,6 +3,21 @@ from __future__ import print_function, unicode_literals
 
 import unittest
 import _margins
+from collections import Counter
+
+
+class TestMarginSniffer(unittest.TestCase):
+
+    def setUp(self):
+        self.ms = _margins.MarginSniffer(_margins.SonorityPeakSlicer)
+
+    def test_margin_sniffer1(self):
+        tokens = ['prak', 'strak', 'stri', 'aks', 'spju']
+        self.ms.parse_tokens(tokens)
+        expected_ini = Counter({'pr': 1, 'str': 2, '': 1, 'spj': 1})
+        expected_fin = Counter({'k': 2, '': 2, 'ks': 1})
+        self.assertDictEqual(dict(self.ms.initial), dict(expected_ini))
+        self.assertDictEqual(dict(self.ms.final), dict(expected_fin))
 
 
 class TestFixedSonoritySlicer(unittest.TestCase):

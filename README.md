@@ -2,6 +2,11 @@
 
 SyllableTK is a library for dealing with syllables in natural language.
 
+## SniffMargins
+
+Sniffs the margins of syllables in order to learn about possible
+onsets and codas.
+
 ## Syllabifier
 
 ## SyllableAnalyzer

@@ -11,9 +11,9 @@ logging.basicConfig(logging=logging.DEBUG)
 
 
 class MarginSniffer(object):
-    """Given a margin parser, count initial and final margins.
+    """Given a WordMarginParser, count initial and final margins.
 
-    margin_parser -- object that implements the margin parser interface.
+    margin_parser -- object that implements the WordMaringPaser interface.
     """
     def __init__(self, margin_parser):
         self.margin_parser = margin_parser()

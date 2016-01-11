@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""Examine word margins as evidence for syllable structure.
+"""
+
 from __future__ import print_function, unicode_literals
 from collections import Counter
 import panphon
@@ -8,21 +11,28 @@ logging.basicConfig(logging=logging.DEBUG)
 
 
 class MarginSniffer(object):
+    """Given a margin parser, count initial and final margins.
+
+    margin_parser -- object that implements the margin parser interface.
+    """
     def __init__(self, margin_parser):
         self.margin_parser = margin_parser()
         self.initial, self.final = Counter(), Counter()
 
     def parse_tokens(self, tokens):
+        """Apply margin parser's parse method to each each token."""
         for token in tokens:
             initial, final = self.margin_parser.parse(token)
             self.initial[initial] += 1
             self.final[final] += 1
 
     def get_counters(self):
+        """Return counts for intial and final margins as 2-tuple."""
         return (self.initial, self.final)
 
 
 class WordMarginParser(object):
+    """Base class for margin parsers."""
 
     def __init__(self):
         self.ft = panphon.FeatureTable()
@@ -38,6 +48,7 @@ class WordMarginParser(object):
 
 
 class FixedSonoritySlicer(WordMarginParser):
+    """Margin parser that slices words before the first and after the last V."""
 
     def _initial_onset(self, son_map):
         i = 0
@@ -56,6 +67,11 @@ class FixedSonoritySlicer(WordMarginParser):
         return cod
 
     def parse(self, word):
+        """Given a word, return the first onset and last coda.
+
+        word -- word-length token (as a string) to be parsed. Returns tuple
+        consisting of first onset and last coda.
+        """
         son_map = self._sonority_map(word)
         ons_son = self._initial_onset(son_map)
         cod_son = self._final_coda(son_map)
@@ -65,6 +81,7 @@ class FixedSonoritySlicer(WordMarginParser):
 
 
 class SonorityPeakSlicer(WordMarginParser):
+    """Slices words approximately before first and after last sonority peak."""
 
     def _mark_offglides(self, son_map):
         state = 'C'
@@ -124,6 +141,12 @@ class SonorityPeakSlicer(WordMarginParser):
             return ons
 
     def parse(self, word):
+        """Given a word, return the first onset and last coda.
+
+        word -- word-length token (as a string) to be parsed. Returns tuple
+        consisting of first onset and last coda.
+        """
+
         son_map = self._sonority_map(word)
         son_map = self._mark_offglides(son_map)
         son_map = self._adjust_anom_fric_cod(son_map)

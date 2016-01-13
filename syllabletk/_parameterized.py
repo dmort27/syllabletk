@@ -6,44 +6,83 @@ import panphon
 
 
 class ParameterizedSyllabifier(object):
+    """Syllabifier that takes sniffed word-margin data as a parameter.
+
+    margins - a 2-tuple of the form <init, fin> that provides attested onsets
+    and codas to the syllabifier. Since these constituents are known to be
+    possible onsets and codas, they are considered to be licit whenever they
+    occur. When a sequence of consonants between nuclei cannot be divided into
+    an onset from init and a coda from fin, sonority is used as a fallback.
+    """
 
     def __init__(self, margins):
         self.attest_ons, self.attest_cod = margins
         self.ft = panphon.FeatureTable()
 
-    def _mark_peaks_as_nuclei(self, scores, cons):
-        # Mark the sonority peaks in a word as nuclei ('N').
+    def _mark_peaks_as_nuclei(self, scores, marks):
+        """Mark the sonority peaks in a word as nuclei ('N')."""
+
         nuclei = []
-        for i in range(len(cons)):
+        for i in range(len(marks)):
             if i == 0:
                 if scores[i] > scores[i + 1] and scores[i] >= 6:
-                    cons[i] = 'N'
+                    marks[i] = 'N'
                     nuclei.append(i)
-            elif i == len(cons) - 1:
+            elif i == len(marks) - 1:
                 if scores[i] > scores[i - 1] and scores[i] >= 6:
-                    cons[i] = 'N'
+                    marks[i] = 'N'
                     nuclei.append(i)
             else:
                 if (scores[i] > scores[i - 1]) and \
                    (scores[i] > scores[i + 1]) and \
                    scores[i] >= 5:
-                    cons[i] = 'N'
+                    marks[i] = 'N'
                     nuclei.append(i)
-        return cons, nuclei
+        return marks, nuclei
 
-    def _mark_glides(self, scores, cons, nuclei):
-        # Mark glides following a nucleus as offglides (')'). The method
-        # does not handle rising-sonority diphthongs.
+    def _mark_glides(self, scores, marks, nuclei):
+        """Mark glides following a nucleus as offglides (')'). The method
+        does not handle rising-sonority diphthongs.
+        """
+
         for i in nuclei:
-            if i < len(cons) - 1:
-                if cons[i + 1] == ' ' and scores[i + 1] >= 7:
-                    cons[i + 1] = ')'
-        return cons
+            if i < len(marks) - 1:
+                if marks[i + 1] == ' ' and scores[i + 1] >= 7:
+                    marks[i + 1] = ')'
+        return marks
 
-    def _mark_ons_cod(self, scores, cons):
+    def _mark_ons_cod(self, scores, marks):
         pass
 
-    def _mark_internal_clusters(self, scores, cons, word):
+    def _ons_valid_by_son(self, scores):
+        """Is onset valid according the the sonority sequencing principle?"""
+        last_score = 0
+        for score in scores:
+            if score < last_score:
+                return False
+            last_score = sc
+        return True
+
+    def _cod_valid_by_son(self, scores):
+        """Is coda valid according the the sonority sequencing principle?"""
+        last_score = 10
+        for score in scores:
+            if score > last_score:
+                return False
+            last_score = score
+        return True
+
+    def _clust_valid_by_son(self, scores):
+        """If intervocalid cluster divides into licit coda and onset, return
+        them, else None.
+        """
+        for i in range(len(scores) + 1):
+            ons, cod = scores[:i], scores[i:]
+            if self._ons_valid_by_son(ons) and self._cod_valid_by_son(cod):
+                return cod, ons
+        return None
+
+    def _mark_internal_clusters(self, scores, marks, word):
 
         def segs2str(segs):
             return ''.join(segs)
@@ -55,31 +94,28 @@ class ParameterizedSyllabifier(object):
         coda, onset = [], []
         for i, seg in enumerate(word):
             if st == 'INI':
-                if cons[i] == 'N':
+                if marks[i] == 'N':
                     st == 'NUC'
                     onset, coda = [], []
-                elif cons[i] == ' ':
-                    cons[i] = 'O'
+                elif marks[i] == ' ':
+                    marks[i] = 'O'
             elif st == 'NUC':
-                if cons[i] in ['N', ')']:
+                if marks[i] in ['N', ')']:
                     pass
-                elif cons == ' ':
+                elif marks == ' ':
                     st == 'INT'
                     onset.append(word[i])
             elif st == 'INT':
-                if cons[i] == ' ':
+                if marks[i] == ' ':
                     onset.append(word[i])
-                elif cons[i] == 'N':
-                    j = find_boundary(i)
+                elif marks[i] == 'N':
+                    j = find_boundary(i)  # too few variables for assignment!
                     st = 'NUC'
 
-
-
-
-    def _mark_initial_onset(self, cons, nuclei):
+    def _mark_initial_onset(self, marks, nuclei):
         pass
 
-    def _mark_final_coda(self, cons, nulcei):
+    def _mark_final_coda(self, marks, nulcei):
         pass
 
     def parse(self, word):

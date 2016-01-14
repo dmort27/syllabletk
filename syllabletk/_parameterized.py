@@ -60,7 +60,7 @@ class ParameterizedSyllabifier(object):
         for score in scores:
             if score < last_score:
                 return False
-            last_score = sc
+            last_score = score
         return True
 
     def _cod_valid_by_son(self, scores):
@@ -73,13 +73,23 @@ class ParameterizedSyllabifier(object):
         return True
 
     def _clust_valid_by_son(self, scores):
-        """If intervocalid cluster divides into licit coda and onset, return
-        them, else None.
+        """If intervocalic cluster divides into licit coda and onset, return
+        index dividing them, else None.
         """
         for i in range(len(scores) + 1):
             ons, cod = scores[:i], scores[i:]
             if self._ons_valid_by_son(ons) and self._cod_valid_by_son(cod):
-                return cod, ons
+                return i
+        return None
+
+    def _clust_valid_by_prec(self, scores):
+        """If intervocalic cluster divides into licit coda and onset, by
+        precedent, return index dividing them, else return None.
+        """
+        for i in range(len(scores) + 1):
+            ons, cod = scores[:i], scores[i:]
+            if ons in self.attest_ons and cod in self.attest_cod:
+                return i
         return None
 
     def _mark_internal_clusters(self, scores, marks, word):

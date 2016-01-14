@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import panphon
+from collections import Counter
+import datrie
 # from _syllabletk import FailedParse
 # from collections import Counter
 
@@ -17,11 +19,29 @@ class ParameterizedSyllabifier(object):
 
     def __init__(self, margins):
         self.attest_ons, self.attest_cod = margins
+        self.attest_ons_rev = [x[::-1] for x in self.attest_ons]
+        self.ons_trie = self._build_trie(self.attest_ons_rev)
+        self.cod_trie = self._build_trie(self.attest_cod)
         self.ft = panphon.FeatureTable()
 
-    def _mark_peaks_as_nuclei(self, scores, marks):
-        """Mark the sonority peaks in a word as nuclei ('N')."""
+    def _build_trie(self, keys):
+        trie = datrie.Trie(self._all_chars(keys))
+        for key in keys:
+            trie[key] = len(key)
+        return trie
 
+    def _all_chars(self, strings):
+        """Return all unicode characters in a list of strings."""
+        chars = Counter()
+        for string in strings:
+            for char in string:
+                chars[char] += 1
+        return ''.join(chars.keys())
+
+    def _mark_peaks_as_nuclei(self, scores, marks):
+        """Mark the sonority peaks in a word as nuclei ('N'). THIS MAY BE
+        INADEQUATE.
+         """
         nuclei = []
         for i in range(len(marks)):
             if i == 0:
@@ -44,7 +64,6 @@ class ParameterizedSyllabifier(object):
         """Mark glides following a nucleus as offglides (')'). The method
         does not handle rising-sonority diphthongs.
         """
-
         for i in nuclei:
             if i < len(marks) - 1:
                 if marks[i + 1] == ' ' and scores[i + 1] >= 7:
@@ -82,12 +101,12 @@ class ParameterizedSyllabifier(object):
                 return i
         return None
 
-    def _clust_valid_by_prec(self, scores):
+    def _clust_valid_by_prec(self, segs):
         """If intervocalic cluster divides into licit coda and onset, by
         precedent, return index dividing them, else return None.
         """
-        for i in range(len(scores) + 1):
-            ons, cod = scores[:i], scores[i:]
+        for i in range(len(segs) + 1):
+            ons, cod = segs[:i], segs[i:]
             if ons in self.attest_ons and cod in self.attest_cod:
                 return i
         return None

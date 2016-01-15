@@ -19,34 +19,9 @@ class ParameterizedSyllabifier(object):
 
     def __init__(self, margins):
         self.attest_ons, self.attest_cod = margins
-        # May not be needed. Delete if not used.
-        self.ons_trie = self._build_trie(self.attest_ons_rev)
-        # Build trie of unreversed codas to find prefixes of consonant clusters.
-        self.cod_trie = self._build_trie(self.attest_cod)
+        self.ons_dict = {x: len(x) for x in self.attest_ons}
+        self.cod_dict = {x: len(x) for x in self.attest_cod}
         self.ft = panphon.FeatureTable()
-
-    def _build_trie(self, keys):
-        trie = datrie.Trie(self._all_chars(keys))
-        for key in keys:
-            trie[key] = len(key)
-        return trie
-
-    def _all_chars(self, strings):
-        """Return all unicode characters in a list of strings."""
-        chars = Counter()
-        for string in strings:
-            for char in string:
-                chars[char] += 1
-        return ''.join(chars.keys())
-
-    def _parse_cluster_attested(self, cluster):
-        i = len(cluster)
-        while i > 0:
-            if cluster[:i] in self.cod_trie and cluster[i:] in self.ons_trie:
-                return i
-            i -= 1
-        return None
-
 
     def _mark_peaks_as_nuclei(self, scores, marks):
         """Mark the sonority peaks in a word as nuclei ('N'). THIS MAY BE
@@ -106,9 +81,9 @@ class ParameterizedSyllabifier(object):
         index dividing them, else None.
         """
         for i in range(len(scores) + 1):
-            ons, cod = scores[:i], scores[i:]
+            cod, ons = scores[:i], scores[i:]
             if self._ons_valid_by_son(ons) and self._cod_valid_by_son(cod):
-                return i
+                return cod, ons
         return None
 
     def _clust_valid_by_prec(self, segs):
@@ -116,9 +91,9 @@ class ParameterizedSyllabifier(object):
         precedent, return index dividing them, else return None.
         """
         for i in range(len(segs) + 1):
-            ons, cod = segs[:i], segs[i:]
+            cod, ons = segs[:i], segs[i:]
             if ons in self.attest_ons and cod in self.attest_cod:
-                return i
+                return cod, ons
         return None
 
     def _mark_internal_clusters(self, scores, marks, word):

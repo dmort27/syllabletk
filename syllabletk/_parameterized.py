@@ -19,8 +19,9 @@ class ParameterizedSyllabifier(object):
 
     def __init__(self, margins):
         self.attest_ons, self.attest_cod = margins
-        self.attest_ons_rev = [x[::-1] for x in self.attest_ons]
+        # May not be needed. Delete if not used.
         self.ons_trie = self._build_trie(self.attest_ons_rev)
+        # Build trie of unreversed codas to find prefixes of consonant clusters.
         self.cod_trie = self._build_trie(self.attest_cod)
         self.ft = panphon.FeatureTable()
 
@@ -37,6 +38,15 @@ class ParameterizedSyllabifier(object):
             for char in string:
                 chars[char] += 1
         return ''.join(chars.keys())
+
+    def _parse_cluster_attested(self, cluster):
+        i = len(cluster)
+        while i > 0:
+            if cluster[:i] in self.cod_trie and cluster[i:] in self.ons_trie:
+                return i
+            i -= 1
+        return None
+
 
     def _mark_peaks_as_nuclei(self, scores, marks):
         """Mark the sonority peaks in a word as nuclei ('N'). THIS MAY BE

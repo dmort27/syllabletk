@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import panphon
-from collections import Counter
-import datrie
-# from _syllabletk import FailedParse
-# from collections import Counter
-
 
 class ParameterizedSyllabifier(object):
     """Syllabifier that takes sniffed word-margin data as a parameter.

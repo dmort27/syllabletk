@@ -2,6 +2,7 @@
 
 import panphon
 
+
 class ParameterizedSyllabifier(object):
     """Syllabifier that takes sniffed word-margin data as a parameter.
 
@@ -22,7 +23,7 @@ class ParameterizedSyllabifier(object):
 
     def _mark_peaks_as_nuclei(self, scores, marks):
         """Mark the sonority peaks in a word as nuclei ('N'). THIS IS LIKELY
-        INADEQUATE AND SHOULD BE REVISED.
+        INADEQUATE AND SHOULD BE REVISED OR REMOVED.
         """
         nuclei = []
         for i in range(len(marks)):
@@ -47,10 +48,26 @@ class ParameterizedSyllabifier(object):
         #
         # Find longest onset in self.attest_ons
         # Mark next segment as nucleus
+        marks, ons = self._mark_init_ons_nuc(segs, marks)
         # Try to match suffix with item in self._attest_cod
         # If not possible, find next sonority peak
         # Mark it, repeat.
         pass
+
+    def _has_prefix(self, base, pref):
+        """Return True if pref is a prefix of base."""
+        for i, seg in enumerate(pref):
+            if base[i] != seg:
+                return False
+        return True
+
+    def _mark_init_ons_nuc(self, segs, marks):
+        for ons in self.attest_ons:
+            if self._has_prefix(segs, ons):
+                for i, seg in enumerate(ons):
+                    marks[i] = 'O'
+                marks[i + 1] = 'N'
+        return segs, marks, ons
 
     def _mark_glides(self, scores, marks, nuclei):
         """Mark glides following a nucleus as offglides (')'). The method

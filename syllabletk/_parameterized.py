@@ -104,7 +104,7 @@ class ParameterizedSyllabifier(object):
         """
         for i in range(len(segs) + 1):
             cod, ons = segs[:i], segs[i:]
-            if ons in self.attest_ons and cod in self.attest_cod:
+            if ons in self.ons_dict and cod in self.cod_dict:
                 return cod, ons
         return None
 

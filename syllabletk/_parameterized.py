@@ -47,7 +47,7 @@ class ParameterizedSyllabifier(object):
                     nuclei.append(i)
         return marks, nuclei
 
-    def _mark_nuclei(self, scores, marks):
+    def _mark_nuclei(self, segs, scores, marks):
         # Replaces _mark_peaks_as_nuclei
         #
         # Find longest onset in self.attest_ons
@@ -108,36 +108,6 @@ class ParameterizedSyllabifier(object):
                 return cod, ons
         return None
 
-    def _mark_internal_clusters(self, scores, marks, word):
-
-        def segs2str(segs):
-            return ''.join(segs)
-
-        def find_boundary(onset):
-            return coda, onset
-
-        st = 'INI'
-        coda, onset = [], []
-        for i, seg in enumerate(word):
-            if st == 'INI':
-                if marks[i] == 'N':
-                    st == 'NUC'
-                    onset, coda = [], []
-                elif marks[i] == ' ':
-                    marks[i] = 'O'
-            elif st == 'NUC':
-                if marks[i] in ['N', ')']:
-                    pass
-                elif marks == ' ':
-                    st == 'INT'
-                    onset.append(word[i])
-            elif st == 'INT':
-                if marks[i] == ' ':
-                    onset.append(word[i])
-                elif marks[i] == 'N':
-                    j = find_boundary(i)  # too few variables for assignment!
-                    st = 'NUC'
-
     def _mark_initial_onset(self, marks, nuclei):
         pass
 
@@ -145,6 +115,7 @@ class ParameterizedSyllabifier(object):
         pass
 
     def parse(self, word):
+        # Needs to be updated... badly.
         word = list(panphon.segment_text(word))  # Divide into segments.
         scores = map(lambda x: self.ft.sonority(x), word)  # Sonority scores.
         cons = len(scores) * [' ']

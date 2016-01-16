@@ -19,14 +19,16 @@ class ParameterizedSyllabifier(object):
 
     def __init__(self, margins):
         self.attest_ons, self.attest_cod = margins
+        self.attest_ons.sort(key=lambda x: len(x), reverse=True)
+        self.attest_cod.sort(key=lambda x: len(x), reverse=True)
         self.ons_dict = {x: len(x) for x in self.attest_ons}
         self.cod_dict = {x: len(x) for x in self.attest_cod}
         self.ft = panphon.FeatureTable()
 
     def _mark_peaks_as_nuclei(self, scores, marks):
-        """Mark the sonority peaks in a word as nuclei ('N'). THIS MAY BE
-        INADEQUATE.
-         """
+        """Mark the sonority peaks in a word as nuclei ('N'). THIS IS LIKELY
+        INADEQUATE AND SHOULD BE REVISED.
+        """
         nuclei = []
         for i in range(len(marks)):
             if i == 0:
@@ -44,6 +46,16 @@ class ParameterizedSyllabifier(object):
                     marks[i] = 'N'
                     nuclei.append(i)
         return marks, nuclei
+
+    def _mark_nuclei(self, scores, marks):
+        # Replaces _mark_peaks_as_nuclei
+        #
+        # Find longest onset in self.attest_ons
+        # Mark next segment as nucleus
+        # Try to match suffix with item in self._attest_cod
+        # If not possible, find next sonority peak
+        # Mark it, repeat.
+        pass
 
     def _mark_glides(self, scores, marks, nuclei):
         """Mark glides following a nucleus as offglides (')'). The method

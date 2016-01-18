@@ -3,6 +3,66 @@
 import panphon
 
 
+class PhonoRepr(object):
+    """Multi-tiered representation of a phonological word.
+
+    Args:
+    segs - Segments as a list of unicode strings.
+
+    Members:
+    marks - Marks that indicate whether the corresponding segment is an onset
+    ("O"), nucleus ("N"), offglide (")"), or coda ("C").
+    scores - sonority scores for the corresponding segment.
+    i - index for operations that scan the string.
+    """
+
+    def __init__(self, segs):
+        self.segs = segs
+        self.marks = len(segs) * [' ']
+        self.i = 0
+        ft = panphon.FeatureTable()
+        self.scores = [ft.sonority(s) for s in segs]
+
+    def get_segment(self, i=None):
+        """Return segment, sonority score, and mark for the index.
+
+        i - the index to use; if unspecified or set to None, self.i is used
+        instead.
+        """
+        i = i if i is not None else self.i
+        return self.segs[i], self.scores[i], self.marks[i]
+
+    def set_mark(self, i, symbol):
+        """Set the mark at the index.
+
+        i - the index.
+        symbol - one of "O", "N", "C", or "G".
+        """
+        self.marks[i] = symbol
+
+    def incr(self):
+        """Increment the object index."""
+        self.i += 1
+
+    def before(self, i=None):
+        """Return the tiers up to self.i.
+
+        Follows the logic of sequence slices.
+        i - index. If not specified, the value of self.i is used.
+        """
+        i = i if i is not None else self.i
+        return self.segs[:i], self.scores[:i], self.marks[:i]
+
+    def after(self, i=None):
+        """Return the tiers after self.i.
+
+        Follows the logic of sequence slices.
+        i - index. If not specified, the value of self.i is used.
+        """
+        i = i if i is not None else self.i
+        return self.segs[i:], self.scores[i:], self.marks[i:]
+
+
 class ParameterizedSyllabifier(object):
     """Syllabifier that takes sniffed word-margin data as a parameter.
 
@@ -61,6 +121,10 @@ class ParameterizedSyllabifier(object):
                 return False
         return True
 
+    def _suffix_is_coda(self, suffix):
+        """Return True if segs are attested coda."""
+        return suffix in self.cod_dict
+
     def _mark_init_ons_nuc(self, segs, marks):
         for ons in self.attest_ons:
             if self._has_prefix(segs, ons):
@@ -68,6 +132,9 @@ class ParameterizedSyllabifier(object):
                     marks[i] = 'O'
                 marks[i + 1] = 'N'
         return segs, marks, ons
+
+    def _mark_offglide(self, scores, marks):
+        pass
 
     def _mark_glides(self, scores, marks, nuclei):
         """Mark glides following a nucleus as offglides (')'). The method

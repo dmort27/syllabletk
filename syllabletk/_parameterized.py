@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+from __future__ import unicode_literals
 
 import panphon
 
@@ -8,6 +10,7 @@ class PhonoRepr(object):
 
     Args:
     segs - Segments as a list of unicode strings.
+    ft - panphon.FeatureTable object.
 
     Members:
     marks - Marks that indicate whether the corresponding segment is an onset
@@ -16,11 +19,10 @@ class PhonoRepr(object):
     i - index for operations that scan the string.
     """
 
-    def __init__(self, segs):
+    def __init__(self, segs, ft):
         self.segs = segs
-        self.marks = len(segs) * [' ']
         self.i = 0
-        ft = panphon.FeatureTable()
+        self.marks = len(segs) * [' ']
         self.scores = [ft.sonority(s) for s in segs]
 
     def get_segment(self, i=None):

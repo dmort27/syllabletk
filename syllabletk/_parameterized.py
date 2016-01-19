@@ -50,19 +50,35 @@ class PhonoRepr(object):
         """Return the tiers up to self.i.
 
         Follows the logic of sequence slices.
-        i - index. If not specified, the value of self.i is used.
+        i - index; if not specified, the value of self.i is used.
         """
         i = i if i is not None else self.i
         return self.segs[:i], self.scores[:i], self.marks[:i]
+
+    def string_before(self, i=None):
+        """Return segments before index as string.
+
+        i - index; if not specified, the value of self.i is used.
+        """
+        i = i if i is not None else self.i
+        return ''.join(self.segs[:i])
 
     def after(self, i=None):
         """Return the tiers after self.i.
 
         Follows the logic of sequence slices.
-        i - index. If not specified, the value of self.i is used.
+        i - index; if not specified, the value of self.i is used.
         """
         i = i if i is not None else self.i
         return self.segs[i:], self.scores[i:], self.marks[i:]
+
+    def string_after(self, i=None):
+        """Return segments after index as string.
+
+        i - index; if not specified, the value of self.i is used.
+        """
+        i = i if i is not None else self.i
+        return ''.join(self.segs[i:])
 
 
 class ParameterizedSyllabifier(object):
@@ -83,59 +99,18 @@ class ParameterizedSyllabifier(object):
         self.cod_dict = {x: len(x) for x in self.attest_cod}
         self.ft = panphon.FeatureTable()
 
-    def _mark_peaks_as_nuclei(self, scores, marks):
-        """Mark the sonority peaks in a word as nuclei ('N'). THIS IS LIKELY
-        INADEQUATE AND SHOULD BE REVISED OR REMOVED.
-        """
-        nuclei = []
-        for i in range(len(marks)):
-            if i == 0:
-                if scores[i] > scores[i + 1] and scores[i] >= 6:
-                    marks[i] = 'N'
-                    nuclei.append(i)
-            elif i == len(marks) - 1:
-                if scores[i] > scores[i - 1] and scores[i] >= 6:
-                    marks[i] = 'N'
-                    nuclei.append(i)
-            else:
-                if (scores[i] > scores[i - 1]) and \
-                   (scores[i] > scores[i + 1]) and \
-                   scores[i] >= 5:
-                    marks[i] = 'N'
-                    nuclei.append(i)
-        return marks, nuclei
+    def _longest_prefix(self, phonrepr):
+        while phonrepr.string_before() in self.attest_ons:
+            phonrepr.incr()
 
-    def _mark_nuclei(self, segs, scores, marks):
-        # Replaces _mark_peaks_as_nuclei
-        #
-        # Find longest onset in self.attest_ons
-        # Mark next segment as nucleus
-        marks, ons = self._mark_init_ons_nuc(segs, marks)
-        # Try to match suffix with item in self._attest_cod
-        # If not possible, find next sonority peak
-        # Mark it, repeat.
+    def _suffix_is_coda(self, phonr):
+        """Return True if segs are attested coda."""
         pass
 
-    def _has_prefix(self, base, pref):
-        """Return True if pref is a prefix of base."""
-        for i, seg in enumerate(pref):
-            if base[i] != seg:
-                return False
-        return True
+    def _mark_init_ons_nuc(self, phonr):
+        pass
 
-    def _suffix_is_coda(self, suffix):
-        """Return True if segs are attested coda."""
-        return suffix in self.cod_dict
-
-    def _mark_init_ons_nuc(self, segs, marks):
-        for ons in self.attest_ons:
-            if self._has_prefix(segs, ons):
-                for i, seg in enumerate(ons):
-                    marks[i] = 'O'
-                marks[i + 1] = 'N'
-        return segs, marks, ons
-
-    def _mark_offglide(self, scores, marks):
+    def _mark_offglide(self, phonr):
         pass
 
     def _mark_glides(self, scores, marks, nuclei):
@@ -147,9 +122,6 @@ class ParameterizedSyllabifier(object):
                 if marks[i + 1] == ' ' and scores[i + 1] >= 7:
                     marks[i + 1] = ')'
         return marks
-
-    def _mark_ons_cod(self, scores, marks):
-        pass
 
     def _ons_valid_by_son(self, scores):
         """Is onset valid according the the sonority sequencing principle?"""

@@ -156,3 +156,11 @@ class SonorityPeakSlicer(WordMarginParser):
         ons = self.from_map(ons_son, word)
         cod = self.from_reverse_map(cod_son, word)
         return (ons, cod)
+
+class TupleSonorityPeakSlicer(object):
+
+    def __init__(self):
+        pass
+
+    def parse(self, word):
+        self.word_as_list = panphon.

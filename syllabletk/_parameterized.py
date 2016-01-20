@@ -19,8 +19,8 @@ class PhonoRepr(object):
     i - index for operations that scan the string.
     """
 
-    def __init__(self, segs, ft):
-        self.segs = segs
+    def __init__(self, word, ft):
+        self.segs = ft.segment_text(word)
         self.i = 0
         self.marks = len(segs) * [' ']
         self.scores = [ft.sonority(s) for s in segs]
@@ -99,8 +99,8 @@ class ParameterizedSyllabifier(object):
         self.attest_ons, self.attest_cod = margins
         self.attest_ons.sort(key=lambda x: len(x), reverse=True)
         self.attest_cod.sort(key=lambda x: len(x), reverse=True)
-        self.ons_dict = {x: len(x) for x in self.attest_ons}
-        self.cod_dict = {x: len(x) for x in self.attest_cod}
+        self.ons_dict = {tuple(x): len(x) for x in self.attest_ons}
+        self.cod_dict = {tuple(x): len(x) for x in self.attest_cod}
         self.ft = panphon.FeatureTable()
 
     def _longest_ons_prefix(self, phonr):
@@ -123,4 +123,7 @@ class ParameterizedSyllabifier(object):
         pass
 
     def _mark_offglide(self, phonr):
+        pass
+
+    def syllabify(self, word):
         pass

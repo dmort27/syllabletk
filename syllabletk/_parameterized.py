@@ -22,8 +22,8 @@ class PhonoRepr(object):
     def __init__(self, word, ft):
         self.segs = ft.segment_text(word)
         self.i = 0
-        self.marks = len(segs) * [' ']
-        self.scores = [ft.sonority(s) for s in segs]
+        self.marks = len(self.segs) * [' ']
+        self.scores = [ft.sonority(s) for s in self.segs]
 
     def get_segment(self, i=None):
         """Return segment, sonority score, and mark for the index.

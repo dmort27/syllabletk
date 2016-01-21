@@ -19,10 +19,10 @@ class PhonoRepr(object):
     i - index for operations that scan the string.
     """
 
-    def __init__(self, word, ft):
-        self.segs = ft.segment_text(word)
+    def __init__(self, ft, word):
+        self.segs = list(panphon.segment_text(word))
         self.i = 0
-        self.marks = len(self.segs) * [' ']
+        self.marks = [' ' for s in self.segs]
         self.scores = [ft.sonority(s) for s in self.segs]
 
     def get_segment(self, i=None):
@@ -99,28 +99,35 @@ class ParameterizedSyllabifier(object):
         self.attest_ons, self.attest_cod = margins
         self.attest_ons.sort(key=lambda x: len(x), reverse=True)
         self.attest_cod.sort(key=lambda x: len(x), reverse=True)
-        self.ons_dict = {tuple(x): len(x) for x in self.attest_ons}
-        self.cod_dict = {tuple(x): len(x) for x in self.attest_cod}
+        self.ons_set = {tuple(x) for x in self.attest_ons}
+        self.cod_set = {tuple(x) for x in self.attest_cod}
         self.ft = panphon.FeatureTable()
 
     def _longest_ons_prefix(self, phonr):
-        """Return the longest prefix of phonr.segs that is an attested onset.
+        """Mark and return longest onset prefix.
 
         phonr - a PhonoRepr object
         """
-        while phonr.string_before() in self.attest_ons:
-            phonr.incr()
-        return phonr.string_before(phonr.i - 1)
+        i = len(phonr.segs)
+        while tuple(phonr.segs[:i]) not in self.ons_set and i > 0:
+            i -= 1
+        phonr.set_mark(i, 'N')
+        for j in range(i):
+            phonr.set_mark(j, 'O')
+        return i
 
-    def _suffix_is_coda(self, phonr):
-        """Return True if segs form attested coda.
+    def _longest_cod_suffix(self, phonr):
+        """Mark and return longest coda suffix.
 
         phonr - a PhonoRepr object
         """
-        return phonr.string_after() in self.attest_cod
-
-    def _mark_init_ons_nuc(self, phonr):
-        pass
+        i = 0
+        while tuple(phonr.segs[i:]) not in self.cod_set and i < len(phonr.segs):
+            i += 1
+        phonr.set_mark(i - 1, 'N')
+        for j in range(i, len(phonr.segs)):
+            phonr.set_mark(j, 'C')
+        return i
 
     def _mark_offglide(self, phonr):
         pass

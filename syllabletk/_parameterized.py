@@ -114,7 +114,7 @@ class ParameterizedSyllabifier(object):
         phonr.set_mark(i, 'N')
         for j in range(i):
             phonr.set_mark(j, 'O')
-        return i
+        return phonr
 
     def _longest_cod_suffix(self, phonr):
         """Mark and return longest coda suffix.
@@ -127,10 +127,18 @@ class ParameterizedSyllabifier(object):
         phonr.set_mark(i - 1, 'N')
         for j in range(i, len(phonr.segs)):
             phonr.set_mark(j, 'C')
-        return i
+        return phonr
 
-    def _mark_offglide(self, phonr):
+    def _mark_nuclei(self, phonr):
         pass
+
+    def _mark_offglides(self, phonr):
+        state = ' '
+        for i, mark in enumerate(phonr.marks):
+            if state == 'N' and mark == ' ' and phonr.scores[i] == 7:
+                phonr.set_mark(i, 'G')
+            state = mark
+        return phonr
 
     def syllabify(self, word):
         pass

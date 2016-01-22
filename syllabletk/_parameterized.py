@@ -147,6 +147,7 @@ class ParameterizedSyllabifier(object):
         return phonr
 
     def _mark_offglides(self, phonr):
+        """Mark glides after vowels with 'G'."""
         state = ' '
         for i, mark in enumerate(phonr.marks):
             if state == 'N' and mark == ' ' and phonr.scores[i] == 7:
@@ -155,27 +156,57 @@ class ParameterizedSyllabifier(object):
         return phonr
 
     def _mark_intervocalic_clusts(self, phonr):
+        """Mark the clusters between vowels with 'C's and 'O's."""
         if len(phonr.nuclei) > 1:
-            for i, start in enumerate(phonr.nuclei[:-2]): # Check!
+            for i, start in enumerate(phonr.nuclei[:-1]):
                 end = phonr.nuclei[i + 1]
                 if self._mark_intervocalic_clust_attested(phonr, start, end) is None:
                     self._mark_intervocalic_clust_sonority(phonr, start, end)
         return phonr
 
     def _mark_intervocalic_clust_attested(self, phonr, start, end):
-        for i in range(start, end):  # Figure out the right indices
-            cod = phonr.segs[start:i]
+        """Use attested onsets/codas to mark intervocalic consonants/clusters."""
+        while phonr.marks[start + 1] == 'G':
+            start += 1
+        for i in range(start + 1, end):
+            cod = phonr.segs[start + 1:i]
             ons = phonr.segs[i:end]
-            if cod in self.cod_set and ons in self.ons_set:
-                for j in range(start, i):
-                    phonr.mark(j, 'C')
+            if tuple(cod) in self.cod_set and tuple(ons) in self.ons_set:
+                for j in range(start + 1, i):
+                    phonr.set_mark(j, 'C')
                 for j in range(i, end):
-                    phonr.mark(j, 'O')
+                    phonr.set_mark(j, 'O')
                 return phonr
         return None
 
     def _mark_intervocalic_clust_sonority(self, phonr, start, end):
-        pass
+        """Use sonority to mark intervocalic consonants/clusters."""
+
+        def valid_cod(cod):
+            for i, score in enumerate(cod[:-1]):
+                if i < len(cod) - 1 and score < cod[i + 1]:
+                    return False
+            return True
+
+        def valid_ons(ons):
+            return valid_cod(list(reversed(ons)))
+
+        for i in range(start + 1, end):
+            cod = phonr.scores[start + 1:i]
+            ons = phonr.scores[i:end]
+            if valid_cod(cod) and valid_ons(ons):
+                for j in range(start + 1, i):
+                    phonr.set_mark(j, 'C')
+                for j in range(i, end):
+                    phonr.set_mark(j, 'O')
+                return phonr
+        return None
 
     def syllabify(self, word):
-        pass
+        phonr = self.PhonoRepr(self.ft, word)
+        phonr = self._longest_ons_prefix(phonr)
+        phonr = self._longest_cod_suffix(phonr)
+        phonr = self._mark_rem_nuclei(phonr)
+        phonr = self._mark_offglides(phonr)
+        phonr = self._mark_intervocalic_clusts(phonr)
+        # return phonr.syllabified()

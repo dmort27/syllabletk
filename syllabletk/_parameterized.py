@@ -158,12 +158,12 @@ class ParameterizedSyllabifier(object):
         if len(phonr.nuclei) > 1:
             for i, start in enumerate(phonr.nuclei[:-2]):
                 end = phonr.nuclei[i + 1]
-                if not self._mark_intervocalic_clust_attested(phonr, start, end):
+                if self._mark_intervocalic_clust_attested(phonr, start, end) is None:
                     self._mark_intervocalic_clust_sonority(phonr, start, end)
         return phonr
 
     def _mark_intervocalic_clust_attested(self, phonr, start, end):
-        for i in range(start, end): # Figure out the right indices
+        for i in range(start, end):  # Figure out the right indices
             cod = phonr.segs[start:i]
             ons = phonr.segs[i:end]
             if cod in self.cod_set and ons in self.ons_set:

@@ -3,6 +3,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import panphon
+import regex as re
 
 
 class PhonoRepr(object):
@@ -25,6 +26,7 @@ class PhonoRepr(object):
         self.marks = [' ' for s in self.segs]
         self.scores = [ft.sonority(s) for s in self.segs]
         self.nuclei = []
+        self.syl_regex = re.compile('(O*)(NG?)(C*)')
 
     def get_segment(self, i=None):
         """Return segment, sonority score, and mark for the index.
@@ -87,6 +89,20 @@ class PhonoRepr(object):
         """
         i = i if i is not None else self.i
         return ''.join(self.segs[i:])
+
+    def syllabified(self):
+        """Return segments syllafied according to the marks."""
+        segs = self.segs[:]
+        segs_syl = []
+        for m in self.syl_regex.finditer(''.join(self.marks)):
+            o, n, c = m.groups()
+            ons = segs[0:len(o)]
+            segs = segs[len(o):]
+            nuc = segs[0:len(n)]
+            segs = segs[len(n):]
+            cod = segs[0:len(c)]
+            segs = segs[len(c)]
+            segs_syl.append((ons, nuc, cod))
 
 
 class ParameterizedSyllabifier(object):
@@ -168,6 +184,7 @@ class ParameterizedSyllabifier(object):
         """Use attested onsets/codas to mark intervocalic consonants/clusters."""
         while phonr.marks[start + 1] == 'G':
             start += 1
+        # Change this so zero-codas are allowed (if not already)
         for i in range(start + 1, end):
             cod = phonr.segs[start + 1:i]
             ons = phonr.segs[i:end]

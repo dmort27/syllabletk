@@ -133,11 +133,17 @@ class ParameterizedSyllabifier(object):
             phonr.set_mark(j, 'C')
         return phonr
 
-    def _mark_intervocalic_clust_attested(self):
-        pass
-
-    def _mark_intervocalic_clust_sonority(self):
-        pass
+    def _mark_rem_nuclei(self, phonr):
+        """Marks remaining nuclei after first and last nuclei are marked."""
+        first, last = phonr.nuclei[0], phonr.nuclei[-1]
+        if first == last:
+            return phonr
+        for i, score in enumerate(phonr.scores[first + 1:last]):
+            if score > 7:
+                phonr.set_mark('N')
+            elif score > phonr.scores[i - 1] and score > phonr.scores[i + 1]:
+                phonr.set_mark('N')
+        return phonr
 
     def _mark_offglides(self, phonr):
         state = ' '
@@ -146,6 +152,15 @@ class ParameterizedSyllabifier(object):
                 phonr.set_mark(i, 'G')
             state = mark
         return phonr
+
+    def _mark_intervocalic_clusts(self, phonr):
+        pass
+
+    def _mark_intervocalic_clust_attested(self, phonr, nuc):
+        pass
+
+    def _mark_intervocalic_clust_sonority(self, phonr, nuc):
+        pass
 
     def syllabify(self, word):
         pass

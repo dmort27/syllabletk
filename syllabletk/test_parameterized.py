@@ -7,9 +7,19 @@ import panphon
 import _parameterized
 
 
+class TestPhonoRepr(unittest.TestCase):
+    def SetUp(self):
+        self.ft = panphon.FeatureTable()
+
+    def test_syllabify1(self):
+        phonr = _parameterized.PhonoRepr(self.ft, 'pralstak')
+        phonr.marks = ['O', 'O', 'V', 'C', 'O', 'O', 'V', 'C']
+        self.assertEqual(phonr.syllabified(), [(['p', 'r'], ['a'], ['l']), (['s', 't'], ['a'], ['k'])])
+
+
 class TestParameterizedSyllabifier(unittest.TestCase):
     def setUp(self):
-        ons = [('s', 'p', 'r'), ('p', 'r'), ('r'), ('p'), ('s'), ('t'), ('t', 's')]
+        ons = [('s', 'p', 'r'), ('p', 'r'), ('r'), ('p'), ('s'), ('t'), ('s', 't'), ('k')]
         cod = [('l'), ('l', 'k',), ('l', 's'), ('k'), ('s'), ('t')]
         self.ft = panphon.FeatureTable()
         self.ps = _parameterized.ParameterizedSyllabifier((ons, cod))
@@ -68,6 +78,21 @@ class TestParameterizedSyllabifier(unittest.TestCase):
         self.assertEqual(''.join(phonr.marks), 'OON   N  N NC')
         phonr = self.ps._mark_offglides(phonr)
         self.assertEqual(''.join(phonr.marks), 'OONG  N  N NC')
+
+    def test_mark_all(self):
+        phonr = _parameterized.PhonoRepr(self.ft, 'prowstatsrkol')
+        self.assertEqual(''.join(phonr.marks), '             ')
+        phonr = self.ps._longest_ons_prefix(phonr)
+        self.assertEqual(''.join(phonr.marks), 'OON          ')
+        phonr = self.ps._longest_cod_suffix(phonr)
+        self.assertEqual(''.join(phonr.marks), 'OON        NC')
+        phonr = self.ps._mark_rem_nuclei(phonr)
+        self.assertEqual(''.join(phonr.marks), 'OON   N  N NC')
+        phonr = self.ps._mark_offglides(phonr)
+        self.assertEqual(''.join(phonr.marks), 'OONG  N  N NC')
+        phor = self.ps._mark_intervocalic_clusts(phonr)
+        self.assertEqual(''.join(phonr.marks), 'OONGOONCONONC')
+
 
 if __name__ == '__main__':
     unittest.main()

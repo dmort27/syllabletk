@@ -24,6 +24,7 @@ class PhonoRepr(object):
         self.i = 0
         self.marks = [' ' for s in self.segs]
         self.scores = [ft.sonority(s) for s in self.segs]
+        self.nuclei = []
 
     def get_segment(self, i=None):
         """Return segment, sonority score, and mark for the index.
@@ -41,6 +42,9 @@ class PhonoRepr(object):
         symbol - one of "O", "N", "C", or "G".
         """
         self.marks[i] = symbol
+        if symbol == 'N':
+            self.nuclei.append(i)
+            self.nuclei.sort()
 
     def incr(self):
         """Increment the object index."""
@@ -129,7 +133,10 @@ class ParameterizedSyllabifier(object):
             phonr.set_mark(j, 'C')
         return phonr
 
-    def _mark_nuclei(self, phonr):
+    def _mark_intervocalic_clust_attested(self):
+        pass
+
+    def _mark_intervocalic_clust_sonority(self):
         pass
 
     def _mark_offglides(self, phonr):

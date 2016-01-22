@@ -79,7 +79,7 @@ class TestParameterizedSyllabifier(unittest.TestCase):
         phonr = self.ps._mark_offglides(phonr)
         self.assertEqual(''.join(phonr.marks), 'OONG  N  N NC')
 
-    def test_mark_all(self):
+    def test_mark_all1(self):
         phonr = _parameterized.PhonoRepr(self.ft, 'prowstatsrkol')
         self.assertEqual(''.join(phonr.marks), '             ')
         phonr = self.ps._longest_ons_prefix(phonr)
@@ -90,8 +90,22 @@ class TestParameterizedSyllabifier(unittest.TestCase):
         self.assertEqual(''.join(phonr.marks), 'OON   N  N NC')
         phonr = self.ps._mark_offglides(phonr)
         self.assertEqual(''.join(phonr.marks), 'OONG  N  N NC')
-        phor = self.ps._mark_intervocalic_clusts(phonr)
+        phonr = self.ps._mark_intervocalic_clusts(phonr)
         self.assertEqual(''.join(phonr.marks), 'OONGOONCONONC')
+
+    def test_mark_all2(self):
+        phonr = _parameterized.PhonoRepr(self.ft, 'asta')
+        self.assertEqual(''.join(phonr.marks), '    ')
+        phonr = self.ps._longest_ons_prefix(phonr)
+        self.assertEqual(''.join(phonr.marks), 'N   ')
+        phonr = self.ps._longest_cod_suffix(phonr)
+        self.assertEqual(''.join(phonr.marks), 'N  N')
+        phonr = self.ps._mark_rem_nuclei(phonr)
+        self.assertEqual(''.join(phonr.marks), 'N  N')
+        phonr = self.ps._mark_offglides(phonr)
+        self.assertEqual(''.join(phonr.marks), 'N  N')
+        phonr = self.ps._mark_intervocalic_clusts(phonr)
+        self.assertEqual(''.join(phonr.marks), 'NOON')
 
 
 if __name__ == '__main__':

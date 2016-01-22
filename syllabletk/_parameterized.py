@@ -156,7 +156,7 @@ class ParameterizedSyllabifier(object):
 
     def _mark_intervocalic_clusts(self, phonr):
         if len(phonr.nuclei) > 1:
-            for i, start in enumerate(phonr.nuclei[:-2]):  # Can't be right!
+            for i, start in enumerate(phonr.nuclei[:-2]): # Check!
                 end = phonr.nuclei[i + 1]
                 if self._mark_intervocalic_clust_attested(phonr, start, end) is None:
                     self._mark_intervocalic_clust_sonority(phonr, start, end)

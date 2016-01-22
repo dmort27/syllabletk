@@ -138,11 +138,12 @@ class ParameterizedSyllabifier(object):
         first, last = phonr.nuclei[0], phonr.nuclei[-1]
         if first == last:
             return phonr
-        for i, score in enumerate(phonr.scores[first + 1:last]):
+        for i, score in zip(range(first, last), phonr.scores[first:last]):
             if score > 7:
-                phonr.set_mark('N')
-            elif score > phonr.scores[i - 1] and score > phonr.scores[i + 1]:
-                phonr.set_mark('N')
+                phonr.set_mark(i, 'N')
+            elif score > phonr.scores[i - 1] and \
+                    score > phonr.scores[i + 1]:
+                phonr.set_mark(i, 'N')
         return phonr
 
     def _mark_offglides(self, phonr):

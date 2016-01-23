@@ -8,6 +8,7 @@ import regex as re
 
 # logging.basicConfig(level=logging.DEBUG)
 
+
 class PhonoRepr(object):
     """Multi-tiered representation of a phonological word.
 

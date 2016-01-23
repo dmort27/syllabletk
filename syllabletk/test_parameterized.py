@@ -5,22 +5,24 @@ from __future__ import unicode_literals
 import unittest
 import panphon
 import _parameterized
+import logging
 
 
 class TestPhonoRepr(unittest.TestCase):
-    def SetUp(self):
+    def setUp(self):
         self.ft = panphon.FeatureTable()
 
     def test_syllabify1(self):
         phonr = _parameterized.PhonoRepr(self.ft, 'pralstak')
-        phonr.marks = ['O', 'O', 'V', 'C', 'O', 'O', 'V', 'C']
+        logging.debug('phonr.segs={}'.format(phonr.segs))
+        phonr.marks = ['O', 'O', 'N', 'C', 'O', 'O', 'N', 'C']
         self.assertEqual(phonr.syllabified(), [(['p', 'r'], ['a'], ['l']), (['s', 't'], ['a'], ['k'])])
 
 
 class TestParameterizedSyllabifier(unittest.TestCase):
     def setUp(self):
-        ons = [('s', 'p', 'r'), ('p', 'r'), ('r'), ('p'), ('s'), ('t'), ('s', 't'), ('k')]
-        cod = [('l'), ('l', 'k',), ('l', 's'), ('k'), ('s'), ('t')]
+        ons = [(), ('s', 'p', 'r'), ('p', 'r'), ('r'), ('p'), ('s'), ('t'), ('s', 't'), ('k')]
+        cod = [(), ('l'), ('l', 'k',), ('l', 's'), ('k'), ('s'), ('t')]
         self.ft = panphon.FeatureTable()
         self.ps = _parameterized.ParameterizedSyllabifier((ons, cod))
 

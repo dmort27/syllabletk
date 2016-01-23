@@ -94,6 +94,11 @@ class TestParameterizedSyllabifier(unittest.TestCase):
         self.assertEqual(''.join(phonr.marks), 'OONG  N  N NC')
         phonr = self.ps._mark_intervocalic_clusts(phonr)
         self.assertEqual(''.join(phonr.marks), 'OONGOONCONONC')
+        syllabified = [(['p', 'r'], ['o', 'w'], []),
+                       (['s', 't'], ['a'], ['t']),
+                       (['s'], ['r'], []),
+                       (['k'], ['o'], ['l'])]
+        self.assertEqual(phonr.syllabified(), syllabified)
 
     def test_mark_all2(self):
         phonr = _parameterized.PhonoRepr(self.ft, 'asta')

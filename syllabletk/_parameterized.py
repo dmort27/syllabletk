@@ -25,7 +25,6 @@ class PhonoRepr(object):
 
     def __init__(self, ft, word):
         self.segs = list(panphon.segment_text(word))
-        self.i = 0
         self.marks = [' ' for s in self.segs]
         self.scores = [ft.sonority(s) for s in self.segs]
         self.nuclei = []
@@ -51,50 +50,8 @@ class PhonoRepr(object):
             self.nuclei.append(i)
             self.nuclei.sort()
 
-    def incr(self):
-        """Increment the object index."""
-        self.i += 1
-
-    def decr(self):
-        """Decrement the oject index."""
-        self.i -= 1
-
-    def before(self, i=None):
-        """Return the tiers up to self.i.
-
-        Follows the logic of sequence slices.
-        i - index; if not specified, the value of self.i is used.
-        """
-        i = i if i is not None else self.i
-        return self.segs[:i], self.scores[:i], self.marks[:i]
-
-    def string_before(self, i=None):
-        """Return segments before index as string.
-
-        i - index; if not specified, the value of self.i is used.
-        """
-        i = i if i is not None else self.i
-        return ''.join(self.segs[:i])
-
-    def after(self, i=None):
-        """Return the tiers after self.i.
-
-        Follows the logic of sequence slices.
-        i - index; if not specified, the value of self.i is used.
-        """
-        i = i if i is not None else self.i
-        return self.segs[i:], self.scores[i:], self.marks[i:]
-
-    def string_after(self, i=None):
-        """Return segments after index as string.
-
-        i - index; if not specified, the value of self.i is used.
-        """
-        i = i if i is not None else self.i
-        return ''.join(self.segs[i:])
-
     def syllabified(self):
-        """Return segments syllafied according to the marks."""
+        """Return segments syllabified according to the marks."""
         segs = self.segs[:]
         segs_syl = []
         for m in self.syl_regex.finditer(''.join(self.marks)):
@@ -130,7 +87,8 @@ class ParameterizedSyllabifier(object):
     def _longest_ons_prefix(self, phonr):
         """Mark and return longest onset prefix.
 
-        phonr - a PhonoRepr object
+        phonr - a PhonoRepr object with the longest onset prefix, if any,
+        marked.
         """
         i = len(phonr.segs)
         while tuple(phonr.segs[:i]) not in self.ons_set and i > 0:
@@ -143,7 +101,7 @@ class ParameterizedSyllabifier(object):
     def _longest_cod_suffix(self, phonr):
         """Mark and return longest coda suffix.
 
-        phonr - a PhonoRepr object
+        phonr - a PhonoRepr object with the longest coda suffix, if any, marked.
         """
         i = 0
         while tuple(phonr.segs[i:]) not in self.cod_set and i < len(phonr.segs):
@@ -154,7 +112,11 @@ class ParameterizedSyllabifier(object):
         return phonr
 
     def _mark_rem_nuclei(self, phonr):
-        """Marks remaining nuclei after first and last nuclei are marked."""
+        """Marks remaining nuclei after first and last nuclei are marked.
+
+        phonr - a PhonoRepr object.
+        return - a mutated PhonoRepr object with all nuclei marked.
+        """
         first, last = phonr.nuclei[0], phonr.nuclei[-1]
         if first == last:
             return phonr
@@ -167,7 +129,11 @@ class ParameterizedSyllabifier(object):
         return phonr
 
     def _mark_offglides(self, phonr):
-        """Mark glides after vowels with 'G'."""
+        """Mark glides after vowels with 'G'.
+
+        phonr - a PhonoRepr object.
+        return - mutated PhonoRepr object with postvocalic glides marked.
+        """
         state = ' '
         for i, mark in enumerate(phonr.marks):
             if state == 'N' and mark == ' ' and phonr.scores[i] == 7:
@@ -176,7 +142,11 @@ class ParameterizedSyllabifier(object):
         return phonr
 
     def _mark_intervocalic_clusts(self, phonr):
-        """Mark the clusters between vowels with 'C's and 'O's."""
+        """Mark the clusters between vowels with 'C's and 'O's.
+
+        phonr - a PhonoRepr object.
+        return - mutated PhonoRepr object.
+        """
         if len(phonr.nuclei) > 1:
             for i, start in enumerate(phonr.nuclei[:-1]):
                 end = phonr.nuclei[i + 1]
@@ -185,10 +155,15 @@ class ParameterizedSyllabifier(object):
         return phonr
 
     def _mark_intervocalic_clust_attested(self, phonr, start, end):
-        """Use attested onsets/codas to mark intervocalic consonants/clusters."""
+        """Use attested onsets/codas to mark intervocalic consonants/clusters.
+
+        phonr - a PhonoRepr object.
+        start - index marking the beginning of a consonant sequence.
+        end - index marking the end of a consonant sequence.
+        return - mutated phonr if syllabificiation is possible; otherwise, None.
+        """
         while phonr.marks[start + 1] == 'G':
             start += 1
-        # Change this so zero-codas are allowed (if not already).
         for i in range(start + 1, end):
             cod = phonr.segs[start + 1:i]
             ons = phonr.segs[i:end]
@@ -201,7 +176,13 @@ class ParameterizedSyllabifier(object):
         return None
 
     def _mark_intervocalic_clust_sonority(self, phonr, start, end):
-        """Use sonority to mark intervocalic consonants/clusters."""
+        """Use sonority to mark intervocalic consonants/clusters.
+
+        phonr - a PhonoRepr object.
+        start - index marking the beginning of a consonant sequence.
+        end - index marking the end of a consonant sequence.
+        return - mutated phonr if syllabificiation is possible; otherwise, None.
+        """
 
         def valid_cod(cod):
             for i, score in enumerate(cod[:-1]):
@@ -224,6 +205,11 @@ class ParameterizedSyllabifier(object):
         return None
 
     def syllabify(self, word):
+        """Syllabify word into a list of tuples of lists.
+
+        word - Unicode IPA string to be syllabified.
+        return - a list of 3-tuples (syllables) consisting of lists of strings.
+        """
         phonr = self.PhonoRepr(self.ft, word)
         phonr = self._longest_ons_prefix(phonr)
         phonr = self._longest_cod_suffix(phonr)

@@ -13,14 +13,14 @@ class PhonoRepr(object):
     """Multi-tiered representation of a phonological word.
 
     Args:
-    segs - Segments as a list of unicode strings.
-    ft - panphon.FeatureTable object.
+    segs -- Segments as a list of unicode strings.
+    ft -- panphon.FeatureTable object.
 
     Members:
-    marks - Marks that indicate whether the corresponding segment is an onset
+    marks -- Marks that indicate whether the corresponding segment is an onset
     ("O"), nucleus ("N"), offglide (")"), or coda ("C").
-    scores - sonority scores for the corresponding segment.
-    i - index for operations that scan the string.
+    scores -- sonority scores for the corresponding segment.
+    i -- index for operations that scan the string.
     """
 
     def __init__(self, ft, word):
@@ -33,7 +33,7 @@ class PhonoRepr(object):
     def get_segment(self, i=None):
         """Return segment, sonority score, and mark for the index.
 
-        i - the index to use; if unspecified or set to None, self.i is used
+        i -- the index to use; if unspecified or set to None, self.i is used
         instead.
         """
         i = i if i is not None else self.i
@@ -42,8 +42,8 @@ class PhonoRepr(object):
     def set_mark(self, i, symbol):
         """Set the mark at the index.
 
-        i - the index.
-        symbol - one of "O", "N", "C", or "G".
+        i -- the index.
+        symbol -- one of "O", "N", "C", or "G".
         """
         self.marks[i] = symbol
         if symbol == 'N':
@@ -69,7 +69,7 @@ class PhonoRepr(object):
 class ParameterizedSyllabifier(object):
     """Syllabifier that takes sniffed word-margin data as a parameter.
 
-    margins - a 2-tuple of the form <init, fin> that provides attested onsets
+    margins -- a 2-tuple of the form <init, fin> that provides attested onsets
     and codas to the syllabifier. Since these constituents are known to be
     possible onsets and codas, they are considered to be licit whenever they
     occur. When a sequence of consonants between nuclei cannot be divided into
@@ -87,7 +87,7 @@ class ParameterizedSyllabifier(object):
     def _longest_ons_prefix(self, phonr):
         """Mark and return longest onset prefix.
 
-        phonr - a PhonoRepr object with the longest onset prefix, if any,
+        phonr -- a PhonoRepr object with the longest onset prefix, if any,
         marked.
         """
         i = len(phonr.segs)
@@ -101,7 +101,7 @@ class ParameterizedSyllabifier(object):
     def _longest_cod_suffix(self, phonr):
         """Mark and return longest coda suffix.
 
-        phonr - a PhonoRepr object with the longest coda suffix, if any, marked.
+        phonr -- a PhonoRepr object with the longest coda suffix, if any, marked.
         """
         i = 0
         while tuple(phonr.segs[i:]) not in self.cod_set and i < len(phonr.segs):
@@ -114,8 +114,8 @@ class ParameterizedSyllabifier(object):
     def _mark_rem_nuclei(self, phonr):
         """Marks remaining nuclei after first and last nuclei are marked.
 
-        phonr - a PhonoRepr object.
-        return - a mutated PhonoRepr object with all nuclei marked.
+        phonr -- a PhonoRepr object.
+        return -- a mutated PhonoRepr object with all nuclei marked.
         """
         first, last = phonr.nuclei[0], phonr.nuclei[-1]
         if first == last:
@@ -131,8 +131,8 @@ class ParameterizedSyllabifier(object):
     def _mark_offglides(self, phonr):
         """Mark glides after vowels with 'G'.
 
-        phonr - a PhonoRepr object.
-        return - mutated PhonoRepr object with postvocalic glides marked.
+        phonr -- a PhonoRepr object.
+        return -- mutated PhonoRepr object with postvocalic glides marked.
         """
         state = ' '
         for i, mark in enumerate(phonr.marks):
@@ -144,8 +144,8 @@ class ParameterizedSyllabifier(object):
     def _mark_intervocalic_clusts(self, phonr):
         """Mark the clusters between vowels with 'C's and 'O's.
 
-        phonr - a PhonoRepr object.
-        return - mutated PhonoRepr object.
+        phonr -- a PhonoRepr object.
+        return -- mutated PhonoRepr object.
         """
         if len(phonr.nuclei) > 1:
             for i, start in enumerate(phonr.nuclei[:-1]):
@@ -157,10 +157,10 @@ class ParameterizedSyllabifier(object):
     def _mark_intervocalic_clust_attested(self, phonr, start, end):
         """Use attested onsets/codas to mark intervocalic consonants/clusters.
 
-        phonr - a PhonoRepr object.
-        start - index marking the beginning of a consonant sequence.
-        end - index marking the end of a consonant sequence.
-        return - mutated phonr if syllabificiation is possible; otherwise, None.
+        phonr -- a PhonoRepr object.
+        start -- index marking the beginning of a consonant sequence.
+        end -- index marking the end of a consonant sequence.
+        return -- mutated phonr if syllabificiation is possible; otherwise, None.
         """
         while phonr.marks[start + 1] == 'G':
             start += 1
@@ -178,10 +178,10 @@ class ParameterizedSyllabifier(object):
     def _mark_intervocalic_clust_sonority(self, phonr, start, end):
         """Use sonority to mark intervocalic consonants/clusters.
 
-        phonr - a PhonoRepr object.
-        start - index marking the beginning of a consonant sequence.
-        end - index marking the end of a consonant sequence.
-        return - mutated phonr if syllabificiation is possible; otherwise, None.
+        phonr -- a PhonoRepr object.
+        start -- index marking the beginning of a consonant sequence.
+        end -- index marking the end of a consonant sequence.
+        return -- mutated phonr if syllabificiation is possible; otherwise, None.
         """
 
         def valid_cod(cod):
@@ -207,8 +207,8 @@ class ParameterizedSyllabifier(object):
     def syllabify(self, word):
         """Syllabify word into a list of tuples of lists.
 
-        word - Unicode IPA string to be syllabified.
-        return - a list of 3-tuples (syllables) consisting of lists of strings.
+        word -- Unicode IPA string to be syllabified.
+        return -- a list of 3-tuples (syllables) consisting of lists of strings.
         """
         phonr = self.PhonoRepr(self.ft, word)
         phonr = self._longest_ons_prefix(phonr)

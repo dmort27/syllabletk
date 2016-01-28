@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from __future__ import print_function
 from __future__ import unicode_literals
 
@@ -8,73 +7,12 @@ from collections import Counter
 
 
 class SyllableAnalyzer(object):
-    def __init__(self):
-        self.ft = FeatureTable()
+    """Makes and tracks analyses of syllables.
 
-    def syl_ons_obs_son(self, (ons, _, __)):
-        """SYL_ONSET_OBSTRUENT_SONORANT"""
-        if self.ft.match_pattern(pat('[-son][+son]'), ons):
-            return ons
-        else:
-            return None
-
-    def syl_ons_plos_son(self, (ons, _, __)):
-        """SYL_ONSET_PLOSIVE_SONORANT"""
-        if self.ft.match_pattern(pat('[-son -cont][+son]'), ons):
-            return ons
-        else:
-            return None
-
-    def syl_ons_obs_approx(self, (ons, _, __)):
-        if self.ft.match_pattern(pat('[-son][+son +cont -nas]'), ons):
-            return ons
-        else:
-            return None
-
-    def syl_ons_plos_approx(self, (ons, _, __)):
-        if self.ft.match_pattern(pat('[-son -cont][+son +cont -nas]'), ons):
-            return ons
-        else:
-            return None
-
-    def syl_ons_obs_obs(self, (ons, _, __)):
-        if self.ft.match_pattern(pat('[-son][-son]'), ons):
-            return ons
-        else:
-            return None
-
-    def syl_ons_plos_plos(self, (ons, _, __)):
-        if self.ft.match_pattern(pat('[-son -cont][-son -cont]'), ons):
-            return ons
-        else:
-            return None
-
-    def syl_ons_son_son(self, (ons, _, __)):
-        if self.ft.match_pattern(pat('[+son][+son]'), ons):
-            return ons
-        else:
-            return None
-
-    def syl_ons_nas_nas(self, (ons, _, __)):
-        if self.ft.match_pattern(pat('[-syl +son +nas][-syl +son +nas]'), ons):
-            return ons
-        else:
-            return None
-
-    def syl_ons_complex_2(self, (ons, _, __)):
-        if self.ft.match_pattern(pat('[][]'), ons):
-            return ons
-        else:
-            return None
-
-    def syl_ons_complex_3(self, (ons, _, __)):
-        if self.ft.match_pattern(pat('[][][]'), ons):
-            return ons
-        else:
-            return None
-
-
-class SyllableAnalyzer2(object):
+    Given a sequence of syllables structured as 3-tuples of constituents (onset,
+    nucleus, coda), each consisting of n-tuples of segments, this class tracks
+    whether syllables exemplify particular structural features.
+    """
 
     def __init__(self):
         self.ft = FeatureTable()
@@ -101,6 +39,48 @@ class SyllableAnalyzer2(object):
              lambda (o, _, __): self.ft.match_pattern_seq(pat('[-son +cont][-son -cont]'), o)),
             ('SYL_ONSET_SONORANT_SONORANT',
              lambda (o, _, __): self.ft.match_pattern_seq(pat('[+son][+son]'), o)),
+            ('SYL_ONSET_SONORANT_GLIDE',
+             lambda (o, _, __): self.ft.match_pattern_seq(pat('[+son][-syl -cons]'), o)),
+            ('SYL_ONSET_OBSTRUENT_SONORANT',
+             lambda (o, _, __): self.ft.match_pattern_seq(pat('[+son][+son]'), o)),
+            ('SYL_ONSET_OBSTRUENT_GLIDE',
+             lambda (o, _, __): self.ft.match_pattern_seq(pat('[-son][-syl -cons]'), o)),
+            ('SYL_ONSET_OBSTRUENT_LIQUID',
+             lambda (o, _, __): self.ft.match_pattern_seq(pat('[-son][+cons +son -nas]'), o)),
+            ('SYL_ONSET_OBSTRUENT_NASAL',
+             lambda (o, _, __): self.ft.match_pattern_seq(pat('[-son][+nas -syl]'), o)),
+            ('SYL_CODA_PLOSIVE',
+             lambda (_, __, c): self.ft.match_pattern_seq(pat('[-son -cont]'), c)),
+            ('SYL_CODA_FRICATIVE',
+             lambda (_, __, c): self.ft.match_pattern_seq(pat('[-son +cont]'), c)),
+            ('SYL_CODA_NASAL',
+             lambda (_, __, c): self.ft.match_pattern_seq(pat('[-syl +son +nas]'), c)),
+            ('SYL_CODA_LIQUID',
+             lambda (_, __, c): self.ft.match_pattern_seq(pat('[-syl +son -nas]'), c)),
+            ('SYL_CODA_COMPLEX_2',
+             lambda (_, __, c): self.ft.match_pattern_seq(pat('[][]'), c)),
+            ('SYL_CODA_COMPLEX_3',
+             lambda (_, __, c): self.ft.match_pattern_seq(pat('[][][]'), c)),
+            ('SYL_CODA_COMPLEX_4',
+             lambda (_, __, c): self.ft.match_pattern_seq(pat('[][][][]'), c)),
+            ('SYL_CODA_OBSTRUENT_OBSTRUENT',
+             lambda (_, __, c): self.ft.match_pattern_seq(pat('[-son][-son]'), c)),
+            ('SYL_CODA_PLOSIVE_PLOSIVE',
+             lambda (_, __, c): self.ft.match_pattern_seq(pat('[-son -cont][-son -cont]'), c)),
+            ('SYL_CODA_FRICATIVE_FRICATIVE',
+             lambda (_, __, c): self.ft.match_pattern_seq(pat('[-son -cont][-son -cont]'), c)),
+            ('SYL_CODA_PLOSIVE_FRICATIVE',
+             lambda (_, __, c): self.ft.match_pattern_seq(pat('[-son -cont][-son +cont]'), c)),
+            ('SYL_CODA_FRICATIVE_PLOSIVE',
+             lambda (_, __, c): self.ft.match_pattern_seq(pat('[-son +cont][-son -cont]'), c)),
+            ('SYL_CODA_SONORANT_SONORANT',
+             lambda (_, __, c): self.ft.match_pattern_seq(pat('[+son][+son]'), c)),
+            ('SYL_CODA_LIQUID_NASAL',
+             lambda (_, __, c): self.ft.match_pattern_seq(pat('[-syl +son -nas][-syl +son +nas]'), c)),
+            ('SYL_CODA_SONORANT_OBSTRUENT',
+             lambda (_, __, c): self.ft.match_pattern_seq(pat('[+son][+son]'), c)),
+            ('SYL_NUCLEUS_BRANCHING',
+             lambda (_, n, __): self.ft.match_pattern_seq(pat('[][]'), n)),
         ]
 
     def analyze_syllable(self, syl):

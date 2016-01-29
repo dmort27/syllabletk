@@ -19,12 +19,15 @@ class MarginSniffer(object):
         self.margin_parser = margin_parser()
         self.initial, self.final = Counter(), Counter()
 
+    def parse_token(self, token):
+        initial, final = self.margin_parser.parse(token)
+        self.initial[initial] += 1
+        self.final[final] += 1
+
     def parse_tokens(self, tokens):
         """Apply margin parser's parse method to each each token."""
         for token in tokens:
-            initial, final = self.margin_parser.parse(token)
-            self.initial[initial] += 1
-            self.final[final] += 1
+            self.parse_token(token)
 
     def get_counters(self):
         """Return counts for intial and final margins as 2-tuple."""

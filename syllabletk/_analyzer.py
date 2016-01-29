@@ -84,7 +84,24 @@ class SyllableAnalyzer(object):
         ]
 
     def analyze_syllable(self, syl):
+        """Detect which structural patterns characterize a syllable.
+
+        Iterates through the descriptions of phonotactic features and increments
+        self.feature_counter by one for each feature whose structural
+        description is matched.
+
+        syl -- a 3-tuple <onset, nucleus, coda>, each part consisting of
+        n-tuples of licit Unicode IPA strings.
+        """
         self.syllable_counter += 1
         for name, f in self.features:
             if f(syl):
                 self.feature_counter[name] += 1
+
+    def analyze_syllables(self, syls):
+        """Applies self.analyze_syllable to each syllable in a sequence.
+
+        syls -- a sequence of syllables (see self.analyze_syllable).
+        """
+        for syl in syls:
+            self.analyze_syllable(syl)

@@ -136,6 +136,12 @@ class TestSonorityPeakSlicer(unittest.TestCase):
     def test_parsing14(self):
         self.assertEqual(self.fss.parse('klp'), ('k', 'p'))
 
+    def test_parsing14(self):
+        self.assertEqual(self.fss.parse('b'), ('', ''))
+
+    def test_parsing14(self):
+        self.assertEqual(self.fss.parse('e'), ('', ''))
+
 
 if __name__ == '__main__':
     unittest.main()

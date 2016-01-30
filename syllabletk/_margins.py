@@ -149,7 +149,7 @@ class SonorityPeakSlicer(WordMarginParser):
         word -- word-length token (as a string) to be parsed. Returns tuple
         consisting of first onset and last coda.
         """
-
+        word = self.ft.segs(word)
         son_map = self._sonority_map(word)
         son_map = self._mark_offglides(son_map)
         son_map = self._adjust_anom_fric_cod(son_map)

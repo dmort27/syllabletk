@@ -73,7 +73,8 @@ class ParameterizedSyllabifier(object):
     and codas to the syllabifier. Since these constituents are known to be
     possible onsets and codas, they are considered to be licit whenever they
     occur. When a sequence of consonants between nuclei cannot be divided into
-    an onset from init and a coda from fin, sonority is used as a fallback.
+    an onset from self.attest_ons and a coda from attest_cod, sonority is used
+    as a fallback.
     """
 
     def __init__(self, margins):

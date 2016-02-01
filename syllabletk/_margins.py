@@ -44,7 +44,7 @@ class WordMarginParser(object):
         return map(self.ft.sonority, word)
 
     def from_map(self, son_map, word):
-        return ''.join([x for (x, _) in zip(word, son_map)])
+        return tuple([x for (x, _) in zip(word, son_map)])
 
     def from_reverse_map(self, son_map, word):
         return self.from_map(son_map[::-1], word[::-1])[::-1]
@@ -119,10 +119,10 @@ class SonorityPeakSlicer(WordMarginParser):
         length = len(son_map)
         i = 0
         ons = []
-        if length == 1:
+        if length <= 1:
             return []
         else:
-            while i < length - 1 and son_map[i] <= son_map[i + 1]:
+            while i < length - 1 and son_map[i] < 7 and son_map[i] <= son_map[i + 1]:
                 ons.append(son_map[i])
                 i += 1
             while len(ons) > 1 and ons[-1] > 7:
@@ -133,10 +133,10 @@ class SonorityPeakSlicer(WordMarginParser):
         length = len(son_map)
         i = length - 1
         ons = []
-        if length == 1:
+        if length <= 1:
             return []
         else:
-            while i > 0 and son_map[i] <= son_map[i - 1]:
+            while i > 0 and son_map[i] < 7 and son_map[i] <= son_map[i - 1]:
                 ons.insert(0, son_map[i])
                 i -= 1
             while len(ons) > 1 and ons[0] > 7:

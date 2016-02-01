@@ -217,4 +217,4 @@ class ParameterizedSyllabifier(object):
         phonr = self._mark_rem_nuclei(phonr)
         phonr = self._mark_offglides(phonr)
         phonr = self._mark_intervocalic_clusts(phonr)
-        # return phonr.syllabified()
+        return phonr.syllabified()

@@ -24,9 +24,10 @@ def main(margins):
     finals = margin_dict['finals'].keys()
     ps = ParameterizedSyllabifier((initials, finals))
     for line in sys.stdin:
-        word = line.strip().encode('utf-8')
+        word = line.strip().decode('utf-8')
         syllabified = ps.syllabify(word)
-        print(prettify_syllables(syllabified).encode('utf-8'), file=sys.stdout)
+        if syllabified:
+            print(prettify_syllables(syllabified).encode('utf-8'), file=sys.stdout)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Uses syllable margins as parameters to parse a list of words.')

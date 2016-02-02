@@ -3,10 +3,10 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import panphon
-# import logging
+import logging
 import regex as re
 
-# logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 
 
 class PhonoRepr(object):
@@ -24,7 +24,7 @@ class PhonoRepr(object):
     """
 
     def __init__(self, ft, word):
-        self.segs = list(panphon.segment_text(word))
+        self.segs = ft.filter_segs(ft.segs_safe(word))
         self.marks = [' ' for s in self.segs]
         self.scores = [ft.sonority(s) for s in self.segs]
         self.nuclei = []
@@ -47,8 +47,9 @@ class PhonoRepr(object):
         """
         self.marks[i] = symbol
         if symbol == 'N':
-            self.nuclei.append(i)
-            self.nuclei.sort()
+            if i not in self.nuclei:
+                self.nuclei.append(i)
+                self.nuclei.sort()
 
     def syllabified(self):
         """Return segments syllabified according to the marks."""
@@ -148,6 +149,7 @@ class ParameterizedSyllabifier(object):
         phonr -- a PhonoRepr object.
         return -- mutated PhonoRepr object.
         """
+        print("phonr.nuclei={}".format(phonr.nuclei))
         if len(phonr.nuclei) > 1:
             for i, start in enumerate(phonr.nuclei[:-1]):
                 end = phonr.nuclei[i + 1]
@@ -211,10 +213,15 @@ class ParameterizedSyllabifier(object):
         word -- Unicode IPA string to be syllabified.
         return -- a list of 3-tuples (syllables) consisting of lists of strings.
         """
-        phonr = self.PhonoRepr(self.ft, word)
-        phonr = self._longest_ons_prefix(phonr)
-        phonr = self._longest_cod_suffix(phonr)
-        phonr = self._mark_rem_nuclei(phonr)
-        phonr = self._mark_offglides(phonr)
-        phonr = self._mark_intervocalic_clusts(phonr)
-        return phonr.syllabified()
+        # logging.debug('word={}'.format(word))
+        print('word={}'.format(word))
+        phonr = PhonoRepr(self.ft, word)
+        if phonr.segs:
+            phonr = self._longest_ons_prefix(phonr)
+            phonr = self._longest_cod_suffix(phonr)
+            phonr = self._mark_rem_nuclei(phonr)
+            phonr = self._mark_offglides(phonr)
+            phonr = self._mark_intervocalic_clusts(phonr)
+            return phonr.syllabified()
+        else:
+            return None

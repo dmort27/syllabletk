@@ -11,7 +11,7 @@ setup(name='syllabletk',
       install_requires=['setuptools',
                         'panphon',
                         'regex'],
-      scripts=['syllabletk/bin/syllabify_list.py', 'syllabletk/bin/syllable_sniffer.py'],
+      scripts=['syllabletk/bin/param_syllabify.py', 'syllabletk/bin/syllable_sniffer.py'],
       packages=['syllabletk'],
       zip_safe=True
       )

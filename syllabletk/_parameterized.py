@@ -149,7 +149,6 @@ class ParameterizedSyllabifier(object):
         phonr -- a PhonoRepr object.
         return -- mutated PhonoRepr object.
         """
-        print("phonr.nuclei={}".format(phonr.nuclei))
         if len(phonr.nuclei) > 1:
             for i, start in enumerate(phonr.nuclei[:-1]):
                 end = phonr.nuclei[i + 1]

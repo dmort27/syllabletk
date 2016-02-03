@@ -94,9 +94,13 @@ class ParameterizedSyllabifier(object):
         i = len(phonr.segs)
         while tuple(phonr.segs[:i]) not in self.ons_set and i > 0:
             i -= 1
-        phonr.set_mark(i, 'N')
-        for j in range(i):
-            phonr.set_mark(j, 'O')
+        if i > 0:
+            phonr.set_mark(i, 'N')
+            for j in range(i):
+                phonr.set_mark(j, 'O')
+        elif phonr.scores[0] <= 7 and phonr.scores[1] > 7:
+            phonr.set_mark(0, 'O')
+            phonr.set_mark(1, 'N')
         return phonr
 
     def _longest_cod_suffix(self, phonr):

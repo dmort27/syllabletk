@@ -29,10 +29,38 @@ class TestPS1(unittest.TestCase):
         self.ps = _parameterized.ParameterizedSyllabifier((ons, cod))
 
     def test_syllabify1(self):
-        self.assertEqual(self.ps.syllabify('pod'), (['p'], ['o'], ['d']))
+        self.assertEqual(self.ps.syllabify('pod'), [(['p'], ['o'], ['d'])])
 
     def test_syllabify2(self):
-        self.assertEqual(self.ps.syllabify('jod'), (['j'], ['o'], ['d']))
+        self.assertEqual(self.ps.syllabify('sod'), [(['s'], ['o'], ['d'])])
+
+    def test_syllabify3(self):
+        self.assertEqual(self.ps.syllabify('nod'), [(['n'], ['o'], ['d'])])
+
+    def test_syllabify4(self):
+        self.assertEqual(self.ps.syllabify('lod'), [(['l'], ['o'], ['d'])])
+
+    def test_syllabify5(self):
+        self.assertEqual(self.ps.syllabify('jod'), [(['j'], ['o'], ['d'])])
+
+    def test_syllabify6(self):
+        self.assertEqual(self.ps.syllabify('iod'), [([], ['i'], []), ([], ['o'], ['d'])])
+
+    def test_step_by_step1(self):
+        phonr = _parameterized.PhonoRepr(self.ft, 'jod')
+        self.assertEqual(phonr.marks, [' ', ' ', ' '])
+        phonr = self.ps._longest_ons_prefix(phonr)
+        self.assertEqual(phonr.marks, ['O', 'N', ' '])
+        phonr = self.ps._longest_cod_suffix(phonr)
+        self.assertEqual(phonr.marks, ['O', 'N', 'C'])
+        phonr = self.ps._mark_rem_nuclei(phonr)
+        self.assertEqual(phonr.marks, ['O', 'N', 'C'])
+        phonr = self.ps._mark_intervocalic_clusts(phonr)
+        self.assertEqual(phonr.marks, ['O', 'N', 'C'])
+
+    def test_initials1(self):
+        self.assertIn(('j',), self.ps.ons_set)
+
 
 if __name__ == '__main__':
     unittest.main()

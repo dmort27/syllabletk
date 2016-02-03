@@ -136,7 +136,7 @@ class SonorityPeakSlicer(WordMarginParser):
         if length <= 1:
             return []
         else:
-            while i > 0 and son_map[i] <= 7 and son_map[i] <= son_map[i - 1]:
+            while i > 0 and son_map[i] < 7 and son_map[i] <= son_map[i - 1]:
                 ons.insert(0, son_map[i])
                 i -= 1
             while len(ons) > 1 and ons[0] > 7:

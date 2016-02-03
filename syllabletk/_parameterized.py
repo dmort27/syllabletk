@@ -89,8 +89,7 @@ class ParameterizedSyllabifier(object):
     def _longest_ons_prefix(self, phonr):
         """Mark and return longest onset prefix.
 
-        phonr -- a PhonoRepr object with the longest onset prefix, if any,
-        marked.
+        phonr -- a PhonoRepr object.
         """
         i = len(phonr.segs)
         while tuple(phonr.segs[:i]) not in self.ons_set and i > 0:

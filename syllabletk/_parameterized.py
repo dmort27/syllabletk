@@ -182,7 +182,6 @@ class ParameterizedSyllabifier(object):
         for i in range(start + 1, end):
             cod = phonr.segs[start + 1:i]
             ons = phonr.segs[i:end]
-            # print('{} + {}'.format(''.join(cod), ''.join(ons)).encode('utf-8'))
             if tuple(cod) in self.cod_set and tuple(ons) in self.ons_set:
                 for j in range(start + 1, i):
                     phonr.set_mark(j, 'C')
@@ -226,7 +225,6 @@ class ParameterizedSyllabifier(object):
         word -- Unicode IPA string to be syllabified.
         return -- a list of 3-tuples (syllables) consisting of lists of strings.
         """
-        print('word={}'.format(word).encode('utf-8'))
         phonr = PhonoRepr(self.ft, word)
         if phonr.segs:
             phonr = self._longest_ons_prefix(phonr)
@@ -235,7 +233,6 @@ class ParameterizedSyllabifier(object):
             phonr = self._mark_offglides(phonr)
             phonr = self._mark_intervocalic_clusts(phonr)
             segs_syl = phonr.syllabified()
-            # assert flatten_syllables(segs_syl) == phonr.segs
             return segs_syl
         else:
             return None

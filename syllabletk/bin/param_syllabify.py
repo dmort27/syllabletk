@@ -8,6 +8,7 @@ import argparse
 import sys
 import yaml
 
+
 def prettify_syllables(word):
     s = ''
     for o, n, c in word:
@@ -16,6 +17,7 @@ def prettify_syllables(word):
         c = ''.join(c)
         s = s + '({}-{}-{})'.format(o, n, c)
     return s
+
 
 def main(margins):
     with open(margins) as f:
@@ -27,7 +29,8 @@ def main(margins):
         word = line.strip().decode('utf-8')
         syllabified = ps.syllabify(word)
         if syllabified:
-            print(prettify_syllables(syllabified).encode('utf-8'), file=sys.stdout)
+            pretty = prettify_syllables(syllabified)
+            print('"{}" -> {}'.format(word, pretty).encode('utf-8'), file=sys.stdout)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Uses syllable margins as parameters to parse a list of words.')

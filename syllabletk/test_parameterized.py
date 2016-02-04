@@ -58,6 +58,18 @@ class TestPS1(unittest.TestCase):
         phonr = self.ps._mark_intervocalic_clusts(phonr)
         self.assertEqual(phonr.marks, ['O', 'N', 'C'])
 
+    def test_step_by_step2(self):
+        phonr = _parameterized.PhonoRepr(self.ft, 'ile')
+        self.assertEqual(phonr.marks, [' ', ' ', ' '])
+        phonr = self.ps._longest_ons_prefix(phonr)
+        self.assertEqual(phonr.marks, ['N', ' ', ' '])
+        phonr = self.ps._longest_cod_suffix(phonr)
+        self.assertEqual(phonr.marks, ['N', ' ', 'N'])
+        phonr = self.ps._mark_rem_nuclei(phonr)
+        self.assertEqual(phonr.marks, ['N', ' ', 'N'])
+        phonr = self.ps._mark_intervocalic_clusts(phonr)
+        self.assertEqual(phonr.marks, ['N', 'O', 'N'])
+
     def test_initials1(self):
         self.assertIn(('j',), self.ps.ons_set)
 

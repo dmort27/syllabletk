@@ -9,6 +9,14 @@ import regex as re
 logging.basicConfig(level=logging.DEBUG)
 
 
+def flatten_syllables(segs_syl):
+    flat_string = []
+    for syl in segs_syl:
+        for const in syl:
+            flat_string.append(const)
+    return flat_string
+
+
 class PhonoRepr(object):
     """Multi-tiered representation of a phonological word.
 
@@ -101,6 +109,8 @@ class ParameterizedSyllabifier(object):
         elif phonr.scores[0] <= 7 and phonr.scores[1] > 7:
             phonr.set_mark(0, 'O')
             phonr.set_mark(1, 'N')
+        elif phonr.scores[0] > 7:
+            phonr.set_mark(0, 'N')
         return phonr
 
     def _longest_cod_suffix(self, phonr):
@@ -160,7 +170,7 @@ class ParameterizedSyllabifier(object):
         return phonr
 
     def _mark_intervocalic_clust_attested(self, phonr, start, end):
-        """Use attested onsets/codas to mark intervocalic consonants/clusters.
+        """Use attested onsets/codas to parse intervocalic consonants/clusters.
 
         phonr -- a PhonoRepr object.
         start -- index marking the beginning of a consonant sequence.
@@ -172,6 +182,7 @@ class ParameterizedSyllabifier(object):
         for i in range(start + 1, end):
             cod = phonr.segs[start + 1:i]
             ons = phonr.segs[i:end]
+            # print('{} + {}'.format(''.join(cod), ''.join(ons)).encode('utf-8'))
             if tuple(cod) in self.cod_set and tuple(ons) in self.ons_set:
                 for j in range(start + 1, i):
                     phonr.set_mark(j, 'C')
@@ -215,8 +226,7 @@ class ParameterizedSyllabifier(object):
         word -- Unicode IPA string to be syllabified.
         return -- a list of 3-tuples (syllables) consisting of lists of strings.
         """
-        # logging.debug('word={}'.format(word))
-        print('word={}'.format(word))
+        print('word={}'.format(word).encode('utf-8'))
         phonr = PhonoRepr(self.ft, word)
         if phonr.segs:
             phonr = self._longest_ons_prefix(phonr)
@@ -224,6 +234,8 @@ class ParameterizedSyllabifier(object):
             phonr = self._mark_rem_nuclei(phonr)
             phonr = self._mark_offglides(phonr)
             phonr = self._mark_intervocalic_clusts(phonr)
-            return phonr.syllabified()
+            segs_syl = phonr.syllabified()
+            # assert flatten_syllables(segs_syl) == phonr.segs
+            return segs_syl
         else:
             return None

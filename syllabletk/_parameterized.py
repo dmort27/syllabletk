@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function
-from __future__ import unicode_literals
+from __future__ import print_function, unicode_literals
 
-import panphon
 import logging
+
+import panphon.sonority
 import regex as re
 
 logging.basicConfig(level=logging.DEBUG)
@@ -22,7 +22,7 @@ class PhonoRepr(object):
 
     Args:
     segs -- Segments as a list of unicode strings.
-    ft -- panphon.FeatureTable object.
+    son -- panphon.sonority.Sonority object.
 
     Members:
     marks -- Marks that indicate whether the corresponding segment is an onset
@@ -31,10 +31,10 @@ class PhonoRepr(object):
     i -- index for operations that scan the string.
     """
 
-    def __init__(self, ft, word):
-        self.segs = ft.filter_segs(ft.segs_safe(word))
+    def __init__(self, son, word):
+        self.segs = son.filter_segs(son.segs_safe(word))
         self.marks = [' ' for s in self.segs]
-        self.scores = [ft.sonority(s) for s in self.segs]
+        self.scores = [son.sonority(s) for s in self.segs]
         self.nuclei = []
         self.syl_regex = re.compile('(O*)(NG?)(C*)')
 
@@ -92,7 +92,7 @@ class ParameterizedSyllabifier(object):
         self.attest_cod.sort(key=lambda x: len(x), reverse=True)
         self.ons_set = {tuple(x) for x in self.attest_ons}
         self.cod_set = {tuple(x) for x in self.attest_cod}
-        self.ft = panphon.FeatureTable()
+        self.son = panphon.sonority.Sonority()
 
     def _longest_ons_prefix(self, phonr):
         """Mark and return longest onset prefix.
@@ -102,7 +102,9 @@ class ParameterizedSyllabifier(object):
         i = len(phonr.segs)
         while tuple(phonr.segs[:i]) not in self.ons_set and i > 0:
             i -= 1
-        if i > 0:
+        if i == 1:
+            phonr.set_mark(0, 'N')
+        elif i > 1:
             phonr.set_mark(i, 'N')
             for j in range(i):
                 phonr.set_mark(j, 'O')
@@ -225,7 +227,7 @@ class ParameterizedSyllabifier(object):
         word -- Unicode IPA string to be syllabified.
         return -- a list of 3-tuples (syllables) consisting of lists of strings.
         """
-        phonr = PhonoRepr(self.ft, word)
+        phonr = PhonoRepr(self.son, word)
         if phonr.segs:
             phonr = self._longest_ons_prefix(phonr)
             phonr = self._longest_cod_suffix(phonr)

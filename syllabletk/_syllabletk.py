@@ -3,7 +3,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import logging
-import panphon
+import panphon.sonority
 import regex as re
 from types import ListType
 
@@ -25,7 +25,7 @@ class Syllabifier(object):
 
         word -- Unicode IPA string
         """
-        self.ft = panphon.FeatureTable()
+        self.ft = panphon.sonority.Sonority()
         if son_peak:
             self.son_peak_parse(word)
         else:

@@ -39,11 +39,11 @@ class TestSyllabifier(unittest.TestCase):
                          [(u'ʃ', u'ɑɪ', u'n'), (u'ʃ', u'aj', u'n')])
 
 
-# Deprecated due to deprecation of _syllabletk.SyllableAnalyzer.
+# Deprecated due to deprecation of _syllabletk.SyllableAnalyzerDepr.
 
 class TestSyllableTK(unittest.TestCase):
     def setUp(self):
-        self.sa = _syllabletk.SyllableAnalyzer()
+        self.sa = _syllabletk.SyllableAnalyzerDepr()
 
     def test_the_onsets(self):
         ws = [u'trup', u'pɹum', u'ap', u'strupon']
@@ -74,19 +74,19 @@ class TestSyllableTK(unittest.TestCase):
                          results)
 
     def test_the_plosive_approximant_onsets(self):
-        ws = [u'tlup', u'pɹum', u'kwap', u'mleg']
+        ws = [u'tlup', u'pɹum', u'kwap', u'mleɡ']
         results = [1.0, 1.0, 1.0, 0.0]
         self.assertEqual(self.sa.the_plosive_approximant_onsets(ws),
                          results)
 
     def test_the_obstruent_obstruent_onsets(self):
-        ws = [u'skup', u'ptum', u'kwap', u'mleg']
+        ws = [u'skup', u'ptum', u'kwap', u'mleɡ']
         results = [1.0, 1.0, 0.0, 0.0]
         self.assertEqual(self.sa.the_obstruent_obstruent_onsets(ws),
                          results)
 
     def test_the_plosive_plosive_onsets(self):
-        ws = [u'ptuk', u'pɹum', u'kwap', u'gbo']
+        ws = [u'ptuk', u'pɹum', u'kwap', u'ɡbo']
         results = [1.0, 0.0, 0.0, 1.0]
         self.assertEqual(self.sa.the_plosive_plosive_onsets(ws),
                          results)

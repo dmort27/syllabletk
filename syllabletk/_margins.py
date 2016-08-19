@@ -4,7 +4,7 @@
 
 from __future__ import print_function, unicode_literals
 from collections import Counter
-import panphon
+import panphon.sonority
 import logging
 
 logging.basicConfig(logging=logging.DEBUG)
@@ -38,10 +38,10 @@ class WordMarginParser(object):
     """Base class for margin parsers."""
 
     def __init__(self):
-        self.ft = panphon.FeatureTable()
+        self.son = panphon.sonority.Sonority()
 
     def _sonority_map(self, word):
-        return map(self.ft.sonority, word)
+        return map(self.son.sonority, word)
 
     def from_map(self, son_map, word):
         return tuple([x for (x, _) in zip(word, son_map)])
@@ -149,7 +149,7 @@ class SonorityPeakSlicer(WordMarginParser):
         word -- word-length token (as a string) to be parsed. Returns tuple
         consisting of first onset and last coda.
         """
-        word = self.ft.segs(word)
+        word = self.son.segs(word)
         son_map = self._sonority_map(word)
         son_map = self._mark_offglides(son_map)
         son_map = self._adjust_anom_fric_cod(son_map)

@@ -3,17 +3,17 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import unittest
-import panphon
+import panphon.sonority
 import _parameterized
 import logging
 import yaml
 
 class TestPhonoRepr(unittest.TestCase):
     def setUp(self):
-        self.ft = panphon.FeatureTable()
+        self.son = panphon.sonority.Sonority()
 
     def test_syllabify1(self):
-        phonr = _parameterized.PhonoRepr(self.ft, 'pralstak')
+        phonr = _parameterized.PhonoRepr(self.son, 'pralstak')
         logging.debug('phonr.segs={}'.format(phonr.segs))
         phonr.marks = ['O', 'O', 'N', 'C', 'O', 'O', 'N', 'C']
         self.assertEqual(phonr.syllabified(), [(['p', 'r'], ['a'], ['l']), (['s', 't'], ['a'], ['k'])])
@@ -21,7 +21,7 @@ class TestPhonoRepr(unittest.TestCase):
 
 class TestPS1(unittest.TestCase):
     def setUp(self):
-        self.ft = panphon.FeatureTable()
+        self.son = panphon.sonority.Sonority()
         with open('../tur.yml', 'r') as f:
             ons_cod = yaml.load(f.read())
             ons = ons_cod['initials'].keys()
@@ -47,7 +47,7 @@ class TestPS1(unittest.TestCase):
         self.assertEqual(self.ps.syllabify('iod'), [([], ['i'], []), ([], ['o'], ['d'])])
 
     def test_step_by_step1(self):
-        phonr = _parameterized.PhonoRepr(self.ft, 'jod')
+        phonr = _parameterized.PhonoRepr(self.son, 'jod')
         self.assertEqual(phonr.marks, [' ', ' ', ' '])
         phonr = self.ps._longest_ons_prefix(phonr)
         self.assertEqual(phonr.marks, ['O', 'N', ' '])
@@ -59,7 +59,7 @@ class TestPS1(unittest.TestCase):
         self.assertEqual(phonr.marks, ['O', 'N', 'C'])
 
     def test_step_by_step2(self):
-        phonr = _parameterized.PhonoRepr(self.ft, 'ile')
+        phonr = _parameterized.PhonoRepr(self.son, 'ile')
         self.assertEqual(phonr.marks, [' ', ' ', ' '])
         phonr = self.ps._longest_ons_prefix(phonr)
         self.assertEqual(phonr.marks, ['N', ' ', ' '])

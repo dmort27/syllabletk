@@ -25,7 +25,7 @@ class Syllabifier(object):
 
         word -- Unicode IPA string
         """
-        self.ft = panphon.sonority.Sonority()
+        self.son = panphon.sonority.Sonority()
         if son_peak:
             self.son_peak_parse(word)
         else:
@@ -132,7 +132,7 @@ class Syllabifier(object):
             return cons
 
         word = list(panphon.segment_text(word))
-        scores = map(lambda x: self.ft.sonority(x), word)
+        scores = map(lambda x: self.son.sonority(x), word)
         cons = len(scores) * [' ']
         cons, nuclei = mark_peaks_as_nuclei(scores, cons)
         cons = mark_glides(scores, cons, nuclei)
@@ -148,7 +148,7 @@ class Syllabifier(object):
         word - word as Unicode IPA string
         """
         word = list(panphon.segment_text(word))
-        scores = map(lambda x: self.ft.sonority(x), word)
+        scores = map(lambda x: self.son.sonority(x), word)
         constituents = len(word) * [' ']
         assert type(scores) == ListType
         assert type(constituents) == ListType
@@ -220,7 +220,7 @@ class SyllableAnalyzerDepr(object):
     words -- an iterable of Unicode IPA strings.
     """
     def __init__(self):
-        self.ft = panphon.FeatureTable()
+        self.son = panphon.FeatureTable()
         self.features = [
             # Language allows obstruent-sonorant onsets
             ('SYL_ONS_OBS_SON',
@@ -301,49 +301,49 @@ class SyllableAnalyzerDepr(object):
 
     # Types of onsets
     def the_obstruent_sonorant_onsets(self, ws):
-        regexp = self.ft.compile_regex_from_str('[-syl -son]' +
+        regexp = self.son.compile_regex_from_str('[-syl -son]' +
                                                 '[-syl +son]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_onsets(ws))
 
     def the_plosive_sonorant_onsets(self, ws):
-        regexp = self.ft.compile_regex_from_str('[-syl -son -cont]' +
+        regexp = self.son.compile_regex_from_str('[-syl -son -cont]' +
                                                 '[-syl +son]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_onsets(ws))
 
     def the_obstruent_approximant_onsets(self, ws):
-        regexp = self.ft.compile_regex_from_str('[-syl -son]' +
+        regexp = self.son.compile_regex_from_str('[-syl -son]' +
                                                 '[-syl +son +cont]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_onsets(ws))
 
     def the_plosive_approximant_onsets(self, ws):
-        regexp = self.ft.compile_regex_from_str('[-syl -son -cont]' +
+        regexp = self.son.compile_regex_from_str('[-syl -son -cont]' +
                                                 '[-syl +son +cont]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_onsets(ws))
 
     def the_obstruent_obstruent_onsets(self, ws):
-        regexp = self.ft.compile_regex_from_str('[-syl -son]' +
+        regexp = self.son.compile_regex_from_str('[-syl -son]' +
                                                 '[-syl -son]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_onsets(ws))
 
     def the_plosive_plosive_onsets(self, ws):
-        regexp = self.ft.compile_regex_from_str('[-syl -son -cont]' +
+        regexp = self.son.compile_regex_from_str('[-syl -son -cont]' +
                                                 '[-syl -son -cont]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_onsets(ws))
 
     def the_sonorant_sonorant_onsets(self, ws):
-        regexp = self.ft.compile_regex_from_str('[-syl +son]' +
+        regexp = self.son.compile_regex_from_str('[-syl +son]' +
                                                 '[-syl +son]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_onsets(ws))
 
     def the_nasal_nasal_onsets(self, ws):
-        regexp = self.ft.compile_regex_from_str('[-syl +son +nas]' +
+        regexp = self.son.compile_regex_from_str('[-syl +son +nas]' +
                                                 '[-syl +son +nas]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_onsets(ws))
@@ -366,43 +366,43 @@ class SyllableAnalyzerDepr(object):
 
     # Types of codas
     def the_sonorant_obstruent_codas(self, ws):
-        regexp = self.ft.compile_regex_from_str('[-syl +son]' +
+        regexp = self.son.compile_regex_from_str('[-syl +son]' +
                                                 '[-syl -son]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_codas(ws))
 
     def the_sonorant_plosive_codas(self, ws):
-        regexp = self.ft.compile_regex_from_str('[-syl +son]' +
+        regexp = self.son.compile_regex_from_str('[-syl +son]' +
                                                 '[-syl -son -cont]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_codas(ws))
 
     def the_approximant_obstruent_codas(self, ws):
-        regexp = self.ft.compile_regex_from_str('[-syl +son +cont]' +
+        regexp = self.son.compile_regex_from_str('[-syl +son +cont]' +
                                                 '[-syl -son]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_codas(ws))
 
     def the_approximant_plosive_codas(self, ws):
-        regexp = self.ft.compile_regex_from_str('[-syl +son +cont]' +
+        regexp = self.son.compile_regex_from_str('[-syl +son +cont]' +
                                                 '[-syl -son -cont]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_codas(ws))
 
     def the_approximant_sonorant_sonorant(self, ws):
-        regexp = self.ft.compile_regex_from_str('[-syl +son]' +
+        regexp = self.son.compile_regex_from_str('[-syl +son]' +
                                                 '[-syl +son]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_codas(ws))
 
     def the_approximant_approximant_codas(self, ws):
-        regexp = self.ft.compile_regex_from_str('[-syl +son +cont]' +
+        regexp = self.son.compile_regex_from_str('[-syl +son +cont]' +
                                                 '[-syl +son +cont]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_codas(ws))
 
     def the_plosive_plosive_codas(self, ws):
-        regexp = self.ft.compile_regex_from_str('[-syl -son -cont]' +
+        regexp = self.son.compile_regex_from_str('[-syl -son -cont]' +
                                                 '[-syl -son -cont]')
         return map(lambda x: 1.0 if regexp.match(x) else 0.0,
                    self.the_codas(ws))

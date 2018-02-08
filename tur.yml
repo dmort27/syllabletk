@@ -1,0 +1,628 @@
+finals:
+  !!python/tuple []: 55698
+  ? !!python/tuple [!!python/unicode 'b']
+  : 43
+  ? !!python/tuple [!!python/unicode 'b', !!python/unicode 'b']
+  : 1
+  ? !!python/tuple [!!python/unicode 'b', !!python/unicode 'd']
+  : 36
+  ? !!python/tuple [!!python/unicode 'b', "d\u0361\u0292"]
+  : 5
+  ? !!python/tuple [!!python/unicode 'b', !!python/unicode 'j']
+  : 2
+  ? !!python/tuple [!!python/unicode 'b', !!python/unicode 'p']
+  : 6
+  ? !!python/tuple [!!python/unicode 'b', !!python/unicode 's']
+  : 1
+  ? !!python/tuple [!!python/unicode 'b', !!python/unicode 't']
+  : 1
+  ? !!python/tuple [!!python/unicode 'd']
+  : 111
+  ? !!python/tuple [!!python/unicode 'd', !!python/unicode 'd']
+  : 1
+  ? !!python/tuple [!!python/unicode 'd', "d\u0361\u0292"]
+  : 3
+  ? !!python/tuple [!!python/unicode 'd', !!python/unicode 'j']
+  : 1
+  ? !!python/tuple [!!python/unicode 'd', !!python/unicode 's']
+  : 63
+  ? !!python/tuple ["d\u0361\u0292"]
+  : 46
+  ? !!python/tuple ["d\u0361\u0292", !!python/unicode 'd', "d\u0361\u0292"]
+  : 4
+  ? !!python/tuple ["d\u0361\u0292", !!python/unicode 'j']
+  : 1
+  ? !!python/tuple ["d\u0361\u0292", !!python/unicode 'k']
+  : 43
+  ? !!python/tuple ["d\u0361\u0292", !!python/unicode 'k', !!python/unicode 'j']
+  : 1
+  ? !!python/tuple ["d\u0361\u0292", !!python/unicode 'k', !!python/unicode 's']
+  : 1
+  ? !!python/tuple ["d\u0361\u0292", !!python/unicode 's']
+  : 1
+  ? !!python/tuple ["d\u0361\u0292", !!python/unicode 't']
+  : 2
+  ? !!python/tuple ["d\u0361\u0292", !!python/unicode 'v']
+  : 5
+  ? !!python/tuple [!!python/unicode 'f']
+  : 259
+  ? !!python/tuple [!!python/unicode 'f', !!python/unicode 'f']
+  : 4
+  ? !!python/tuple [!!python/unicode 'f', !!python/unicode 'f', !!python/unicode 'f']
+  : 2
+  ? !!python/tuple [!!python/unicode 'f', !!python/unicode 't']
+  : 15
+  ? !!python/tuple [!!python/unicode 'f', !!python/unicode 't', !!python/unicode 's']
+  : 1
+  ? !!python/tuple [!!python/unicode 'h']
+  : 277
+  ? !!python/tuple [!!python/unicode 'h', "d\u0361\u0292", !!python/unicode 'v']
+  : 1
+  ? !!python/tuple [!!python/unicode 'h', !!python/unicode 'h']
+  : 1
+  ? !!python/tuple [!!python/unicode 'h', !!python/unicode 'l']
+  : 2
+  ? !!python/tuple [!!python/unicode 'h', !!python/unicode 'n']
+  : 22
+  ? !!python/tuple [!!python/unicode 'h', !!python/unicode 't']
+  : 1
+  ? !!python/tuple [!!python/unicode 'j']
+  : 3
+  ? !!python/tuple [!!python/unicode 'k']
+  : 6502
+  ? !!python/tuple [!!python/unicode 'k', !!python/unicode 'k']
+  : 9
+  ? !!python/tuple [!!python/unicode 'k', !!python/unicode 'p']
+  : 5
+  ? !!python/tuple [!!python/unicode 'k', !!python/unicode 's']
+  : 5
+  ? !!python/tuple [!!python/unicode 'k', !!python/unicode 't']
+  : 6
+  ? !!python/tuple [!!python/unicode 'l']
+  : 2323
+  ? !!python/tuple [!!python/unicode 'l', !!python/unicode 'd']
+  : 21
+  ? !!python/tuple [!!python/unicode 'l', !!python/unicode 'd', !!python/unicode 't']
+  : 1
+  ? !!python/tuple [!!python/unicode 'l', "d\u0361\u0292", !!python/unicode 'k']
+  : 3
+  ? !!python/tuple [!!python/unicode 'l', !!python/unicode 'f']
+  : 1
+  ? !!python/tuple [!!python/unicode 'l', !!python/unicode 'f', !!python/unicode 'f']
+  : 1
+  ? !!python/tuple [!!python/unicode 'l', !!python/unicode 'j']
+  : 4
+  ? !!python/tuple [!!python/unicode 'l', !!python/unicode 'k']
+  : 201
+  ? !!python/tuple [!!python/unicode 'l', !!python/unicode 'l']
+  : 53
+  ? !!python/tuple [!!python/unicode 'l', !!python/unicode 'l', !!python/unicode 'j']
+  : 1
+  ? !!python/tuple [!!python/unicode 'l', !!python/unicode 'l', !!python/unicode 'l',
+    !!python/unicode 'l']
+  : 3
+  ? !!python/tuple [!!python/unicode 'l', !!python/unicode 'm']
+  : 5
+  ? !!python/tuple [!!python/unicode 'l', !!python/unicode 'm', !!python/unicode 's']
+  : 1
+  ? !!python/tuple [!!python/unicode 'l', !!python/unicode 'n']
+  : 12
+  ? !!python/tuple [!!python/unicode 'l', !!python/unicode 'p']
+  : 11
+  ? !!python/tuple [!!python/unicode 'l', !!python/unicode 's']
+  : 2
+  ? !!python/tuple [!!python/unicode 'l', !!python/unicode 't']
+  : 22
+  ? !!python/tuple [!!python/unicode 'l', "t\u0361\u0283"]
+  : 13
+  ? !!python/tuple [!!python/unicode 'l', !!python/unicode 'z']
+  : 1
+  ? !!python/tuple [!!python/unicode 'l', "\u027E"]
+  : 3
+  ? !!python/tuple [!!python/unicode 'l', "\u0283"]
+  : 1
+  ? !!python/tuple [!!python/unicode 'm']
+  : 3221
+  ? !!python/tuple [!!python/unicode 'm', !!python/unicode 'b', !!python/unicode 's']
+  : 1
+  ? !!python/tuple [!!python/unicode 'm', !!python/unicode 'f']
+  : 11
+  ? !!python/tuple [!!python/unicode 'm', !!python/unicode 'j']
+  : 2
+  ? !!python/tuple [!!python/unicode 'm', !!python/unicode 'k']
+  : 2
+  ? !!python/tuple [!!python/unicode 'm', !!python/unicode 'm']
+  : 5
+  ? !!python/tuple [!!python/unicode 'm', !!python/unicode 'm', !!python/unicode 'm']
+  : 2
+  ? !!python/tuple [!!python/unicode 'm', !!python/unicode 'n']
+  : 2
+  ? !!python/tuple [!!python/unicode 'm', !!python/unicode 'p']
+  : 8
+  ? !!python/tuple [!!python/unicode 'm', !!python/unicode 'p', !!python/unicode 't']
+  : 2
+  ? !!python/tuple [!!python/unicode 'm', !!python/unicode 's']
+  : 3
+  ? !!python/tuple [!!python/unicode 'm', !!python/unicode 't']
+  : 1
+  ? !!python/tuple [!!python/unicode 'n']
+  : 17952
+  ? !!python/tuple [!!python/unicode 'n', !!python/unicode 'b']
+  : 1
+  ? !!python/tuple [!!python/unicode 'n', !!python/unicode 'd']
+  : 39
+  ? !!python/tuple [!!python/unicode 'n', !!python/unicode 'd', !!python/unicode 'j']
+  : 2
+  ? !!python/tuple [!!python/unicode 'n', !!python/unicode 'd', !!python/unicode 's']
+  : 3
+  ? !!python/tuple [!!python/unicode 'n', "d\u0361\u0292"]
+  : 3
+  ? !!python/tuple [!!python/unicode 'n', "d\u0361\u0292", !!python/unicode 'j']
+  : 1
+  ? !!python/tuple [!!python/unicode 'n', !!python/unicode 'j']
+  : 7
+  ? !!python/tuple [!!python/unicode 'n', !!python/unicode 'k']
+  : 13
+  ? !!python/tuple [!!python/unicode 'n', !!python/unicode 'n']
+  : 7
+  ? !!python/tuple [!!python/unicode 'n', !!python/unicode 'n', !!python/unicode 'j']
+  : 3
+  ? !!python/tuple [!!python/unicode 'n', !!python/unicode 'n', !!python/unicode 'n']
+  : 1
+  ? !!python/tuple [!!python/unicode 'n', !!python/unicode 'n', !!python/unicode 'n',
+    !!python/unicode 'n']
+  : 1
+  ? !!python/tuple [!!python/unicode 'n', !!python/unicode 'p', !!python/unicode 't']
+  : 3
+  ? !!python/tuple [!!python/unicode 'n', !!python/unicode 's']
+  : 44
+  ? !!python/tuple [!!python/unicode 'n', !!python/unicode 't']
+  : 97
+  ? !!python/tuple [!!python/unicode 'n', "t\u0361\u0283"]
+  : 60
+  ? !!python/tuple [!!python/unicode 'n', !!python/unicode 'x', !!python/unicode 'p']
+  : 1
+  ? !!python/tuple [!!python/unicode 'n', !!python/unicode 'z']
+  : 2
+  ? !!python/tuple [!!python/unicode 'n', "\u0261"]
+  : 45
+  ? !!python/tuple [!!python/unicode 'n', "\u0261", !!python/unicode 's']
+  : 2
+  ? !!python/tuple [!!python/unicode 'n', "\u0283"]
+  : 8
+  ? !!python/tuple [!!python/unicode 'p']
+  : 697
+  ? !!python/tuple [!!python/unicode 'p', !!python/unicode 'p']
+  : 1
+  ? !!python/tuple [!!python/unicode 'p', !!python/unicode 'q']
+  : 1
+  ? !!python/tuple [!!python/unicode 'p', !!python/unicode 's']
+  : 2
+  ? !!python/tuple [!!python/unicode 'p', !!python/unicode 't']
+  : 5
+  ? !!python/tuple [!!python/unicode 'q']
+  : 4
+  ? !!python/tuple [!!python/unicode 's']
+  : 697
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 'j']
+  : 1
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 'k']
+  : 26
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 'k', !!python/unicode 'j',
+    !!python/unicode 'j']
+  : 1
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 'p']
+  : 3
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 'p', !!python/unicode 'x']
+  : 2
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 's']
+  : 25
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 's', !!python/unicode 's']
+  : 2
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 's', !!python/unicode 's',
+    !!python/unicode 's', !!python/unicode 's', !!python/unicode 's', !!python/unicode 's']
+  : 1
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 't']
+  : 117
+  ? !!python/tuple [!!python/unicode 't']
+  : 1620
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 'j']
+  : 4
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 's']
+  : 3
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 's', !!python/unicode 'k']
+  : 1
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 't']
+  : 9
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 't', !!python/unicode 'p']
+  : 1
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 't', !!python/unicode 's']
+  : 3
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 't', !!python/unicode 't']
+  : 1
+  ? !!python/tuple ["t\u02BC", !!python/unicode 's']
+  : 3
+  ? !!python/tuple ["t\u0361\u0283"]
+  : 441
+  ? !!python/tuple [!!python/unicode 'v']
+  : 167
+  ? !!python/tuple [!!python/unicode 'v', !!python/unicode 'd']
+  : 2
+  ? !!python/tuple [!!python/unicode 'v', !!python/unicode 'k']
+  : 13
+  ? !!python/tuple [!!python/unicode 'v', !!python/unicode 'p']
+  : 1
+  ? !!python/tuple [!!python/unicode 'x']
+  : 30
+  ? !!python/tuple [!!python/unicode 'x', !!python/unicode 'p']
+  : 1
+  ? !!python/tuple [!!python/unicode 'z']
+  : 2006
+  ? !!python/tuple [!!python/unicode 'z', !!python/unicode 'j']
+  : 5
+  ? !!python/tuple [!!python/unicode 'z', !!python/unicode 'z']
+  : 5
+  ? !!python/tuple ["\u0261"]
+  : 34
+  ? !!python/tuple ["\u0261", !!python/unicode 's']
+  : 1
+  ? !!python/tuple ["\u0261", !!python/unicode 't']
+  : 4
+  ? !!python/tuple ["\u027E"]
+  : 10105
+  ? !!python/tuple ["\u027E", !!python/unicode 'd']
+  : 24
+  ? !!python/tuple ["\u027E", !!python/unicode 'd', !!python/unicode 's']
+  : 1
+  ? !!python/tuple ["\u027E", "d\u0361\u0292"]
+  : 3
+  ? !!python/tuple ["\u027E", !!python/unicode 'f']
+  : 6
+  ? !!python/tuple ["\u027E", !!python/unicode 'j']
+  : 15
+  ? !!python/tuple ["\u027E", !!python/unicode 'k']
+  : 127
+  ? !!python/tuple ["\u027E", !!python/unicode 'l']
+  : 6
+  ? !!python/tuple ["\u027E", !!python/unicode 'l', !!python/unicode 'd']
+  : 2
+  ? !!python/tuple ["\u027E", !!python/unicode 'l', !!python/unicode 'j']
+  : 1
+  ? !!python/tuple ["\u027E", !!python/unicode 'm']
+  : 11
+  ? !!python/tuple ["\u027E", !!python/unicode 'n']
+  : 10
+  ? !!python/tuple ["\u027E", !!python/unicode 'p']
+  : 7
+  ? !!python/tuple ["\u027E", !!python/unicode 's']
+  : 42
+  ? !!python/tuple ["\u027E", !!python/unicode 's', !!python/unicode 't']
+  : 2
+  ? !!python/tuple ["\u027E", !!python/unicode 't']
+  : 144
+  ? !!python/tuple ["\u027E", !!python/unicode 't', !!python/unicode 'j']
+  : 1
+  ? !!python/tuple ["\u027E", "t\u0361\u0283"]
+  : 1
+  ? !!python/tuple ["\u027E", !!python/unicode 'v']
+  : 1
+  ? !!python/tuple ["\u027E", !!python/unicode 'z']
+  : 10
+  ? !!python/tuple ["\u027E", "\u0261"]
+  : 16
+  ? !!python/tuple ["\u027E", "\u0261", "d\u0361\u0292"]
+  : 1
+  ? !!python/tuple ["\u027E", "\u0261", !!python/unicode 'j']
+  : 2
+  ? !!python/tuple ["\u027E", "\u0261", !!python/unicode 'v']
+  : 1
+  ? !!python/tuple ["\u027E", "\u027E"]
+  : 3
+  ? !!python/tuple ["\u027E", "\u027E", !!python/unicode 'j']
+  : 9
+  ? !!python/tuple ["\u027E", "\u027E", "\u027E"]
+  : 1
+  ? !!python/tuple ["\u027E", "\u027E", "\u027E", "\u027E", "\u027E", "\u027E", "\u027E",
+    "\u027E", "\u027E", "\u027E", "\u027E", "\u027E", "\u027E", "\u027E", "\u027E",
+    "\u027E"]
+  : 1
+  ? !!python/tuple ["\u027E", "\u0292"]
+  : 1
+  ? !!python/tuple ["\u0283"]
+  : 1256
+  ? !!python/tuple ["\u0283", !!python/unicode 'k']
+  : 1
+  ? !!python/tuple ["\u0283", !!python/unicode 't']
+  : 1
+  ? !!python/tuple ["\u0292"]
+  : 18
+initials:
+  !!python/tuple []: 28578
+  ? !!python/tuple [!!python/unicode 'b']
+  : 11701
+  ? !!python/tuple [!!python/unicode 'b', !!python/unicode 'b']
+  : 1
+  ? !!python/tuple [!!python/unicode 'b', !!python/unicode 'b', "d\u0361\u0292", !!python/unicode 'j']
+  : 2
+  ? !!python/tuple [!!python/unicode 'b', !!python/unicode 'b', "d\u0361\u0292", !!python/unicode 'n']
+  : 2
+  ? !!python/tuple [!!python/unicode 'b', !!python/unicode 'd']
+  : 1
+  ? !!python/tuple [!!python/unicode 'b', !!python/unicode 'j']
+  : 3
+  ? !!python/tuple [!!python/unicode 'b', !!python/unicode 'l']
+  : 37
+  ? !!python/tuple [!!python/unicode 'b', !!python/unicode 'm', !!python/unicode 'n']
+  : 5
+  ? !!python/tuple [!!python/unicode 'b', !!python/unicode 'n']
+  : 7
+  ? !!python/tuple [!!python/unicode 'b', "\u027E"]
+  : 48
+  ? !!python/tuple [!!python/unicode 'c']
+  : 1856
+  ? !!python/tuple [!!python/unicode 'd']
+  : 7809
+  ? !!python/tuple [!!python/unicode 'd', !!python/unicode 'n']
+  : 9
+  ? !!python/tuple [!!python/unicode 'd', !!python/unicode 's']
+  : 11
+  ? !!python/tuple [!!python/unicode 'd', !!python/unicode 's', !!python/unicode 'l']
+  : 1
+  ? !!python/tuple [!!python/unicode 'd', !!python/unicode 'v']
+  : 2
+  ? !!python/tuple [!!python/unicode 'd', !!python/unicode 'v', !!python/unicode 'd',
+    !!python/unicode 'l']
+  : 1
+  ? !!python/tuple [!!python/unicode 'd', !!python/unicode 'w']
+  : 2
+  ? !!python/tuple [!!python/unicode 'd', !!python/unicode 'w', !!python/unicode 'j']
+  : 1
+  ? !!python/tuple [!!python/unicode 'd', !!python/unicode 'z', !!python/unicode 'm']
+  : 1
+  ? !!python/tuple [!!python/unicode 'd', "\u027E"]
+  : 9
+  ? !!python/tuple ["d\u0361\u0292"]
+  : 874
+  ? !!python/tuple ["d\u0361\u0292", !!python/unicode 'd']
+  : 13
+  ? !!python/tuple ["d\u0361\u0292", !!python/unicode 'd', !!python/unicode 's']
+  : 1
+  ? !!python/tuple ["d\u0361\u0292", !!python/unicode 'h']
+  : 42
+  ? !!python/tuple ["d\u0361\u0292", !!python/unicode 'h', "\u027E"]
+  : 16
+  ? !!python/tuple ["d\u0361\u0292", !!python/unicode 'j']
+  : 1
+  ? !!python/tuple ["d\u0361\u0292", !!python/unicode 'l']
+  : 34
+  ? !!python/tuple ["d\u0361\u0292", !!python/unicode 'm', !!python/unicode 'l']
+  : 1
+  ? !!python/tuple ["d\u0361\u0292", !!python/unicode 'n']
+  : 8
+  ? !!python/tuple ["d\u0361\u0292", !!python/unicode 's']
+  : 3
+  ? !!python/tuple ["d\u0361\u0292", "\u027E"]
+  : 13
+  ? !!python/tuple [!!python/unicode 'f']
+  : 1309
+  ? !!python/tuple [!!python/unicode 'f', !!python/unicode 'b']
+  : 4
+  ? !!python/tuple [!!python/unicode 'f', !!python/unicode 'l']
+  : 22
+  ? !!python/tuple [!!python/unicode 'f', "\u0261"]
+  : 1
+  ? !!python/tuple [!!python/unicode 'f', "\u027E"]
+  : 76
+  ? !!python/tuple [!!python/unicode 'h']
+  : 4533
+  ? !!python/tuple [!!python/unicode 'h', "\u027E"]
+  : 3
+  ? !!python/tuple [!!python/unicode 'j']
+  : 7200
+  ? !!python/tuple [!!python/unicode 'k']
+  : 6047
+  ? !!python/tuple [!!python/unicode 'k', !!python/unicode 'd']
+  : 2
+  ? !!python/tuple [!!python/unicode 'k', !!python/unicode 'h']
+  : 2
+  ? !!python/tuple [!!python/unicode 'k', !!python/unicode 'k']
+  : 3
+  ? !!python/tuple [!!python/unicode 'k', !!python/unicode 'l']
+  : 27
+  ? !!python/tuple [!!python/unicode 'k', !!python/unicode 'm', !!python/unicode 'j']
+  : 2
+  ? !!python/tuple [!!python/unicode 'k', !!python/unicode 'n']
+  : 8
+  ? !!python/tuple [!!python/unicode 'k', !!python/unicode 't']
+  : 2
+  ? !!python/tuple [!!python/unicode 'k', "\u0261", !!python/unicode 'j']
+  : 1
+  ? !!python/tuple [!!python/unicode 'k', "\u027E"]
+  : 105
+  ? !!python/tuple [!!python/unicode 'l']
+  : 510
+  ? !!python/tuple [!!python/unicode 'l', !!python/unicode 'j']
+  : 1
+  ? !!python/tuple [!!python/unicode 'l', !!python/unicode 'l']
+  : 1
+  ? !!python/tuple [!!python/unicode 'm']
+  : 2954
+  ? !!python/tuple [!!python/unicode 'm', !!python/unicode 'j']
+  : 3
+  ? !!python/tuple [!!python/unicode 'm', !!python/unicode 'l']
+  : 1
+  ? !!python/tuple [!!python/unicode 'm', !!python/unicode 'm']
+  : 1
+  ? !!python/tuple [!!python/unicode 'm', !!python/unicode 'w']
+  : 1
+  ? !!python/tuple [!!python/unicode 'n']
+  : 1364
+  ? !!python/tuple [!!python/unicode 'p']
+  : 1187
+  ? !!python/tuple [!!python/unicode 'p', "d\u0361\u0292"]
+  : 1
+  ? !!python/tuple [!!python/unicode 'p', "d\u0361\u0292", !!python/unicode 'v', !!python/unicode 'n']
+  : 1
+  ? !!python/tuple [!!python/unicode 'p', !!python/unicode 'f']
+  : 1
+  ? !!python/tuple [!!python/unicode 'p', !!python/unicode 'h']
+  : 8
+  ? !!python/tuple [!!python/unicode 'p', !!python/unicode 'j']
+  : 2
+  ? !!python/tuple [!!python/unicode 'p', !!python/unicode 'k']
+  : 4
+  ? !!python/tuple [!!python/unicode 'p', !!python/unicode 'k', !!python/unicode 'k',
+    !!python/unicode 'k']
+  : 3
+  ? !!python/tuple [!!python/unicode 'p', !!python/unicode 'k', "k\u02BC", !!python/unicode 'n']
+  : 2
+  ? !!python/tuple [!!python/unicode 'p', !!python/unicode 'l']
+  : 105
+  ? !!python/tuple [!!python/unicode 'p', !!python/unicode 'n']
+  : 6
+  ? !!python/tuple [!!python/unicode 'p', !!python/unicode 's']
+  : 14
+  ? !!python/tuple [!!python/unicode 'p', !!python/unicode 't']
+  : 1
+  ? !!python/tuple [!!python/unicode 'p', "\u027E"]
+  : 283
+  ? !!python/tuple [!!python/unicode 'q']
+  : 15
+  ? !!python/tuple [!!python/unicode 's']
+  : 7717
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 'b', !!python/unicode 's',
+    !!python/unicode 'j']
+  : 1
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 'c']
+  : 8
+  ? !!python/tuple [!!python/unicode 's', "d\u0361\u0292"]
+  : 18
+  ? !!python/tuple [!!python/unicode 's', "d\u0361\u0292", !!python/unicode 'h']
+  : 5
+  ? !!python/tuple [!!python/unicode 's', "d\u0361\u0292", "\u027E"]
+  : 1
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 'h']
+  : 28
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 'h', "\u027E"]
+  : 2
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 'k']
+  : 6
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 'l']
+  : 2
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 'm']
+  : 12
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 'n']
+  : 9
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 'p']
+  : 32
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 'p', !!python/unicode 'd',
+    !!python/unicode 'n']
+  : 3
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 'p', "\u027E"]
+  : 2
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 't']
+  : 48
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 't', !!python/unicode 'd']
+  : 1
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 't', "\u027E"]
+  : 43
+  ? !!python/tuple [!!python/unicode 's', !!python/unicode 'w']
+  : 4
+  ? !!python/tuple [!!python/unicode 's', "\u027E"]
+  : 1
+  ? !!python/tuple [!!python/unicode 't']
+  : 4159
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 'b']
+  : 1
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 'b', !!python/unicode 'm']
+  : 6
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 'b', !!python/unicode 'm',
+    !!python/unicode 'm', !!python/unicode 'j']
+  : 2
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 'b', !!python/unicode 'm',
+    !!python/unicode 'm', !!python/unicode 'n']
+  : 1
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 'c']
+  : 1
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 'h']
+  : 24
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 'h', "\u027E"]
+  : 1
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 'm']
+  : 1
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 'm', !!python/unicode 'm']
+  : 1
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 's']
+  : 161
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 's', !!python/unicode 'k',
+    !!python/unicode 'l']
+  : 1
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 's', !!python/unicode 'v']
+  : 11
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 't']
+  : 4
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 't', !!python/unicode 'b',
+    !!python/unicode 'd']
+  : 1
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 'v', !!python/unicode 'd']
+  : 1
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 'w']
+  : 2
+  ? !!python/tuple [!!python/unicode 't', !!python/unicode 'z']
+  : 1
+  ? !!python/tuple [!!python/unicode 't', "\u027E"]
+  : 92
+  ? !!python/tuple [!!python/unicode 't', "\u0283", !!python/unicode 'k', !!python/unicode 'l']
+  : 3
+  ? !!python/tuple [!!python/unicode 't', "\u0283", !!python/unicode 'k', "\u027E",
+    !!python/unicode 'l']
+  : 2
+  ? !!python/tuple ["t\u0361\u0283"]
+  : 2622
+  ? !!python/tuple ["t\u0361\u0283", "t\u0361\u0283"]
+  : 1
+  ? !!python/tuple [!!python/unicode 'v']
+  : 3988
+  ? !!python/tuple [!!python/unicode 'v', !!python/unicode 'b', "d\u0361\u0292"]
+  : 1
+  ? !!python/tuple [!!python/unicode 'v', "d\u0361\u0292", !!python/unicode 'l']
+  : 1
+  ? !!python/tuple [!!python/unicode 'v', !!python/unicode 'l']
+  : 5
+  ? !!python/tuple [!!python/unicode 'w']
+  : 174
+  ? !!python/tuple [!!python/unicode 'x']
+  : 3
+  ? !!python/tuple [!!python/unicode 'x', "d\u0361\u0292"]
+  : 1
+  ? !!python/tuple [!!python/unicode 'x', "\u025F"]
+  : 1
+  ? !!python/tuple [!!python/unicode 'z']
+  : 743
+  ? !!python/tuple [!!python/unicode 'z', !!python/unicode 'm']
+  : 3
+  ? !!python/tuple ["\u025F"]
+  : 5366
+  ? !!python/tuple ["\u0261"]
+  : 381
+  ? !!python/tuple ["\u0261", !!python/unicode 'b', !!python/unicode 'm']
+  : 8
+  ? !!python/tuple ["\u0261", !!python/unicode 'h']
+  : 1
+  ? !!python/tuple ["\u0261", !!python/unicode 'l']
+  : 14
+  ? !!python/tuple ["\u0261", "\u027E"]
+  : 216
+  ? !!python/tuple ["\u027E"]
+  : 1048
+  ? !!python/tuple ["\u027E", !!python/unicode 'j']
+  : 2
+  ? !!python/tuple ["\u0283"]
+  : 1106
+  ? !!python/tuple ["\u0283", !!python/unicode 'k']
+  : 1
+  ? !!python/tuple ["\u0292"]
+  : 184
+  ? !!python/tuple ["\u0292", !!python/unicode 'h']
+  : 1
+

@@ -3,9 +3,9 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import logging
+import panphon
 import panphon.sonority
 import regex as re
-from types import ListType
 
 # logging.basicConfig(level=logging.DEBUG)
 
@@ -31,6 +31,7 @@ class Syllabifier(object):
         else:
             self.son_parse(word)
         self._check_parse()
+        self.ft = panphon.FeatureTable()
 
     def _check_parse(self):
         # Check whether the current parse is valid.
@@ -131,7 +132,7 @@ class Syllabifier(object):
             trace(cons, 'margins')
             return cons
 
-        word = list(panphon.segment_text(word))
+        word = list(panphon._panphon.segment_text(word))
         scores = map(lambda x: self.son.sonority(x), word)
         cons = len(scores) * [' ']
         cons, nuclei = mark_peaks_as_nuclei(scores, cons)
@@ -147,11 +148,9 @@ class Syllabifier(object):
 
         word - word as Unicode IPA string
         """
-        word = list(panphon.segment_text(word))
-        scores = map(lambda x: self.son.sonority(x), word)
+        word = list(panphon._panphon.segment_text(word))
+        scores = [self.son.sonority(x) for x in word]
         constituents = len(word) * [' ']
-        assert type(scores) == ListType
-        assert type(constituents) == ListType
         # Find nuclei.
         for i, score in enumerate(scores):
             if score >= 7:
@@ -190,7 +189,7 @@ class Syllabifier(object):
         """Yield the syllables in Syllabifier as an interator over tuples."""
         labels = ''.join(self.constituents)
         word = self.word
-        for m in re.finditer(ur'(O*)(\(*N\)*)(C*)', labels):
+        for m in re.finditer(r'(O*)(\(*N\)*)(C*)', labels):
             o, n, c = len(m.group(1)), len(m.group(2)), len(m.group(3))
             ons = ''.join(word[:o])
             nuc = ''.join(word[o:o + n])

@@ -12,7 +12,7 @@ class TestMarginSniffer(unittest.TestCase):
         self.ms = _margins.MarginSniffer(_margins.SonorityPeakSlicer)
 
     def test_margin_sniffer1(self):
-        tokens = ['prak', 'strak', 'stri', 'aks', 'spju']
+        tokens = ['prak', 'strak', 'stri', 'aks', 'spj]
         self.ms.parse_tokens(tokens)
         expected_ini = Counter({'pr': 1, 'str': 2, '': 1, 'spj': 1})
         expected_fin = Counter({'k': 2, '': 2, 'ks': 1})

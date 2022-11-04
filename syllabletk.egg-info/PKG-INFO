@@ -1,0 +1,8 @@
+Metadata-Version: 2.1
+Name: syllabletk
+Version: 0.0
+Summary: Library for manipulating and analyzing syllables transcribed in Unicode IPA.
+Home-page: http://www.davidmortensen.org/syllabletk
+Author: David R. Mortensen
+Author-email: dmortens@cs.cmu.edu
+License: MIT
